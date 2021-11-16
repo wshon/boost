@@ -1,0 +1,581 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>第 8 章 进程间通讯 - Boost C++ 库</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="frontpage.html"><strong aria-hidden="true">1.</strong> 导言</a></li><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">2.</strong> 第 1 章 简介</a></li><li class="chapter-item expanded "><a href="smartpointers.html"><strong aria-hidden="true">3.</strong> 第 2 章 智能指针</a></li><li class="chapter-item expanded "><a href="functionobjects.html"><strong aria-hidden="true">4.</strong> 第 3 章 函数对象</a></li><li class="chapter-item expanded "><a href="eventhandling.html"><strong aria-hidden="true">5.</strong> 第 4 章 事件处理</a></li><li class="chapter-item expanded "><a href="stringhandling.html"><strong aria-hidden="true">6.</strong> 第 5 章 字符串处理</a></li><li class="chapter-item expanded "><a href="multithreading.html"><strong aria-hidden="true">7.</strong> 第 6 章 多线程</a></li><li class="chapter-item expanded "><a href="asio.html"><strong aria-hidden="true">8.</strong> 第 7 章 异步输入输出</a></li><li class="chapter-item expanded "><a href="interprocesscommunication.html" class="active"><strong aria-hidden="true">9.</strong> 第 8 章 进程间通讯</a></li><li class="chapter-item expanded "><a href="filesystem.html"><strong aria-hidden="true">10.</strong> 第 9 章 文件系统</a></li><li class="chapter-item expanded "><a href="datetime.html"><strong aria-hidden="true">11.</strong> 第 10 章 日期与时间</a></li><li class="chapter-item expanded "><a href="serialization.html"><strong aria-hidden="true">12.</strong> 第 11 章 序列化</a></li><li class="chapter-item expanded "><a href="parser.html"><strong aria-hidden="true">13.</strong> 第 12 章 词法分析器</a></li><li class="chapter-item expanded "><a href="containers.html"><strong aria-hidden="true">14.</strong> 第 13 章 容器</a></li><li class="chapter-item expanded "><a href="datastructures.html"><strong aria-hidden="true">15.</strong> 第 14 章 数据结构</a></li><li class="chapter-item expanded "><a href="errorhandling.html"><strong aria-hidden="true">16.</strong> 第 15 章 错误处理</a></li><li class="chapter-item expanded "><a href="castoperators.html"><strong aria-hidden="true">17.</strong> 第 16 章 类型转换操作符</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Boost C++ 库</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="第-8-章-进程间通讯"><a class="header" href="#第-8-章-进程间通讯">第 8 章 进程间通讯</a></h1>
+<h2 id="81-概述"><a class="header" href="#81-概述">8.1. 概述</a></h2>
+<p>进程间通讯描述的是同一台计算机的不同应用程序之间的数据交换机制。 但不包括网络通讯方式。    如果需要经由网络，在彼此运行在不同计算机上的应用程序之间交换数据，请看<a href="./asio.html">第 7 章 <em>异步输入输出</em></a>，该章讲述了    Boost.Asio 库。</p>
+<p>本章展示了 <a href="http://www.boost.org/libs/interprocess/">Boost.Interprocess</a>    库，它包括众多的类，这些类提供了操作系统相关的进程间通讯接口的抽象层。 虽然不同操作系统的进程间通讯概念非常相近，但接口的变化却很大。    Boost.Interprocess 库使通过C++使用这些功能成为可能。</p>
+<p>虽然 Boost.Asio 也可以用来在同一台计算机的应用程序间交换数据，但是使用 Boost.Interprocess    库通常性能更好。 Boost.Interprocess    库实际上是使用操作系统的功能优化了同一台计算机的应用程序之间数据交换，所以它应该是任何不需要网络时应用程序间数据交换的首选。</p>
+<hr />
+<h2 id="82-共享内存"><a class="header" href="#82-共享内存">8.2. 共享内存</a></h2>
+<p>共享内存通常是进程间通讯最快的形式。 它提供一块在应用程序间共享的内存区域。 一个应用能够在另一个应用读取数据时写数据。</p>
+<p>这样一块内存区用 Boost.Interprocess 的    <code>boost::interprocess::shared_memory_object</code> 类表示。    为使用这个类，需要包含 <code>boost/interprocess/shared_memory_object.hpp</code>    头文件。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/shared_memory_object.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::shared_memory_object shdmem(boost::interprocess::open_or_create, &quot;Highscore&quot;, boost::interprocess::read_write); 
+  shdmem.truncate(1024); 
+  std::cout &lt;&lt; shdmem.get_name() &lt;&lt; std::endl; 
+  boost::interprocess::offset_t size; 
+  if (shdmem.get_size(size)) 
+    std::cout &lt;&lt; size &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.2.1/main.cpp">下载源代码</a></li>
+</ul>
+<p><code>boost::interprocess::shared_memory_object</code>    的构造函数需要三个参数。 第一个参数指定共享内存是要创建或打开。 上面的例子实际上是指定了两种方式：用    <code>boost::interprocess::open_or_create</code>    作为参数，共享内存如果存在就将其打开，否则创建之。</p>
+<p>假设之前已经创建了共享内存，现打开前面已经创建的共享内存。 为了唯一标识一块共享内存，需要为其指定一个名称，传递给    <code>boost::interprocess::shared_memory_object</code>    构造函数的第二个参数指定了这个名称。</p>
+<p>第三个，也就是最后一个参数指示应用程序如何访问共享内存。 例子应用程序能够读写共享内存，这是因为最后的一个参数是    <code>boost::interprocess::read_write</code>。</p>
+<p>在创建一个    <code>boost::interprocess::shared_memory_object</code>    类型的对象后，相应的共享内存就在操作系统中建立了。 可是此共享内存区域的大小被初始化为0.为了使用这块区域，需要调用    <code>truncate()</code> 函数，以字节为单位传递请求的共享内存的大小。    对于上面的例子，共享内存提供了1,024字节的空间。</p>
+<p>请注意，<code>truncate()</code> 函数只能在共享内存以    <code>boost::interprocess::read_write</code> 方式打开时调用。 如果不是以此方式打开，将抛出    <code>boost::interprocess::interprocess_exception</code>    异常。</p>
+<p>为了调整共享内存的大小，<code>truncate()</code> 函数可以被重复调用。</p>
+<p>在创建共享内存后，<code>get_name()</code> 和    <code>get_size()</code> 函数可以分别用来查询共享内存的名称和大小。</p>
+<p>由于共享内存被用于应用程序之间交换数据，所以每个应用程序需要映射共享内存到自己的地址空间上，这是通过    <code>boost::interprocess::mapped_region</code> 类实现的。</p>
+<p>你也许有些奇怪，为了访问共享内存，要使用两个类。    是的，<code>boost::interprocess::mapped_region</code>    还能映射不同的对象到具体应用的地址空间。 如 Boost.Interprocess 提供    <code>boost::interprocess::file_mapping</code> 类实际上代表特定文件的共享内存。    所以 <code>boost::interprocess::file_mapping</code> 类型的对象对应一个文件。    向这个对象写入的数据将自动保存关联的物理文件上。 由于    <code>boost::interprocess::file_mapping</code> 不必加载整个文件，但却可以使用    <code>boost::interprocess::mapped_region</code>    将任意部分映射到地址空间，所以就能处理几个GB的文件，而这个文件在32位系统上是不能全部加载到内存上的。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/shared_memory_object.hpp&gt; 
+#include &lt;boost/interprocess/mapped_region.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::shared_memory_object shdmem(boost::interprocess::open_or_create, &quot;Highscore&quot;, boost::interprocess::read_write); 
+  shdmem.truncate(1024); 
+  boost::interprocess::mapped_region region(shdmem, boost::interprocess::read_write); 
+  std::cout &lt;&lt; std::hex &lt;&lt; &quot;0x&quot; &lt;&lt; region.get_address() &lt;&lt; std::endl; 
+  std::cout &lt;&lt; std::dec &lt;&lt; region.get_size() &lt;&lt; std::endl; 
+  boost::interprocess::mapped_region region2(shdmem, boost::interprocess::read_only); 
+  std::cout &lt;&lt; std::hex &lt;&lt; &quot;0x&quot; &lt;&lt; region2.get_address() &lt;&lt; std::endl; 
+  std::cout &lt;&lt; std::dec &lt;&lt; region2.get_size() &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.2.2/main.cpp">下载源代码</a></li>
+</ul>
+<p>为了使用 <code>boost::interprocess::mapped_region</code>    类，需要包含 <code>boost/interprocess/mapped_region.hpp</code> 头文件。    <code>boost::interprocess::mapped_region</code> 的构造函数的第一个参数必须是    <code>boost::interprocess::shared_memory_object</code> 类型的对象。    第二个参数指示此内存区域对应用程序来说，是只读或是可写的。</p>
+<p>上面的例子创建了两个 <code>boost::interprocess::mapped_region</code>    类型的对象。 名为&quot;Highscore&quot;的共享内存，被映射到进程的地址空间两次。 通过    <code>get_address()</code> 和 <code>get_size()</code>    这两个函数获得共享内存的地址和大小写到标准标准输出流中。 在这两种情况下，<code>get_size()</code>    的返回值都是<code>1024</code>，而    <code>get_address()</code> 的返回值是不同的。</p>
+<p>下面的例子使用共享内存写入并读取一个数字。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/shared_memory_object.hpp&gt; 
+#include &lt;boost/interprocess/mapped_region.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::shared_memory_object shdmem(boost::interprocess::open_or_create, &quot;Highscore&quot;, boost::interprocess::read_write); 
+  shdmem.truncate(1024); 
+  boost::interprocess::mapped_region region(shdmem, boost::interprocess::read_write); 
+  int *i1 = static_cast&lt;int*&gt;(region.get_address()); 
+  *i1 = 99; 
+  boost::interprocess::mapped_region region2(shdmem, boost::interprocess::read_only); 
+  int *i2 = static_cast&lt;int*&gt;(region2.get_address()); 
+  std::cout &lt;&lt; *i2 &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.2.3/main.cpp">下载源代码</a></li>
+</ul>
+<p>通过变量 region, 数值 99 被写到共享内存的开始处。 然后变量    region2 访问共享内存的同一个位置，并将数值写入到标准输出流中。 正如前面例子的    <code>get_address()</code> 函数的返回值所见，虽然变量    region 和 region2    表示的是该进程内不同的内存区域，但由于两个内存区域底层实际访问的是同一块共享内存，所以程序打印出<code>99</code>。</p>
+<p>通常，不会在同一个应用程序内使用多个    <code>boost::interprocess::mapped_region</code> 访问同一块共享内存。    实际上在同一个应用程序内将同一个共享内存映射到不同的内存区域上没有多大的意义，上面的例子只用于说明的目的。</p>
+<p>为了删除指定的共享内存，<code>boost::interprocess::shared_memory_object</code>    对象提供了静态的 <code>remove()</code> 函数，此函数带有一个要被删除的共享内存名称的参数。</p>
+<p>Boost.Interprocess 类的RAII概念支持，明显来自关于智能指针的章节，并使用了另外的一个类名称    <code>boost::interprocess::remove_shared_memory_on_destroy</code>。    它的构造函数需要一个已经存在的共享内存的名称。 如果这个类的对象被销毁了，那么在析构函数中会自动删除共享内存的容器。</p>
+<p>请注意构造函数并不创建或打开共享内存，所以，这个类并不是典型RAII概念的代表。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/shared_memory_object.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  bool removed = boost::interprocess::shared_memory_object::remove(&quot;Highscore&quot;); 
+  std::cout &lt;&lt; removed &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.2.4/main.cpp">下载源代码</a></li>
+</ul>
+<p>如果 <code>remove()</code> 没有被调用,    那么，即使进程终止，共享内存还会一直存在，而不论共享内存的删除是否依赖底层操作系统。    多数Unix操作系统，包括Linux，一旦系统重新启动，都会自动删除共享内存，在 Windows 或 Mac OS    X上，<code>remove()</code>    必须调用，这两种系统实际上将共享内存存储在持久化的文件上，此文件在系统重启后还是存在的。</p>
+<p>Windows 提供了一种特别的共享内存，它可以在最后一个使用它的应用程序终止后自动删除。 为了使用它，提供了    <code>boost::interprocess::windows_shared_memory</code> 类，定义在    <code>boost/interprocess/windows_shared_memory.hpp</code>    文件中。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/windows_shared_memory.hpp&gt; 
+#include &lt;boost/interprocess/mapped_region.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::windows_shared_memory shdmem(boost::interprocess::open_or_create, &quot;Highscore&quot;, boost::interprocess::read_write, 1024); 
+  boost::interprocess::mapped_region region(shdmem, boost::interprocess::read_write); 
+  int *i1 = static_cast&lt;int*&gt;(region.get_address()); 
+  *i1 = 99; 
+  boost::interprocess::mapped_region region2(shdmem, boost::interprocess::read_only); 
+  int *i2 = static_cast&lt;int*&gt;(region2.get_address()); 
+  std::cout &lt;&lt; *i2 &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.2.5/main.cpp">下载源代码</a></li>
+</ul>
+<p>请注意，<code>boost::interprocess::windows_shared_memory</code>    类没有提供 <code>truncate()</code> 函数，而是在构造函数的第四个参数传递共享内存的大小。</p>
+<p>即使 <code>boost::interprocess::windows_shared_memory</code>    类是不可移植的，且只能用于Windows系统，但使用这种特别的共享内存在不同应用之间交换数据，它还是非常有用的。</p>
+<hr />
+<h2 id="83-托管共享内存"><a class="header" href="#83-托管共享内存">8.3. 托管共享内存</a></h2>
+<p>上一节介绍了用来创建和管理共享的    <code>boost::interprocess::shared_memory_object</code> 类。    实际上，由于这个类需要按单个字节的方式读写共享内存，所以这个类几乎不用。    概念上来讲，C++改善了类对象的创建并隐藏了它们存储在内存中哪里，是怎们存储的这些细节。</p>
+<p>Boost.Interprocess 提供了一个名为“托管共享内存”的概念，通过定义在 <code>boost/interprocess/managed_shared_memory.hpp</code>    文件中的 <code>boost::interprocess::managed_shared_memory</code>    类提供。    这个类的目的是，对于需要分配到共享内存上的对象，它能够以内存申请的方式初始化，并使其自动为使用同一个共享内存的其他应用程序可用。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::shared_memory_object::remove(&quot;Highscore&quot;); 
+  boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;Highscore&quot;, 1024); 
+  int *i = managed_shm.construct&lt;int&gt;(&quot;Integer&quot;)(99); 
+  std::cout &lt;&lt; *i &lt;&lt; std::endl; 
+  std::pair&lt;int*, std::size_t&gt; p = managed_shm.find&lt;int&gt;(&quot;Integer&quot;); 
+  if (p.first) 
+    std::cout &lt;&lt; *p.first &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.3.1/main.cpp">下载源代码</a></li>
+</ul>
+<p>上面的例子打开名为 &quot;Highscore&quot; 大小为1,024 字节的共享内存，如果它不存在，它会被自动地创建。</p>
+<p>在常规的共享内存中，为了读写数据，单个字节被直接访问，托管共享内存使用诸如    <code>construct()</code> 函数，此函数要求一个数据类型作为模板参数，此例中声明的是    <code>int</code> 类型，函数缺省要求一个名称来表示在共享内存中创建的对象。 此例中使用的名称是 &quot;Integer&quot;。</p>
+<p>由于 <code>construct()</code>    函数返回一个代理对象，为了初始化创建的对象，可以传递参数给此函数。 语法看上去像调用一个构造函数。    这就确保了对象不仅能在共享内存上创建，还能够按需要的方式初始化它。</p>
+<p>为了访问托管共享内存上的一个特定对象，用 <code>find()</code> 函数。    通过传递要查找对象的名称，返回或者是一个指向这个特定对象的指针，或者是0表示给定名称的对象没有找到。</p>
+<p>正如前面例子中所见，<code>find()</code> 实际返回的是    <code>std::pair</code> 类型的对象，first    属性提供的是指向对象的指针，那么 second 属性提供的是什么呢？</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::shared_memory_object::remove(&quot;Highscore&quot;); 
+  boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;Highscore&quot;, 1024); 
+  int *i = managed_shm.construct&lt;int&gt;(&quot;Integer&quot;)[10](99); 
+  std::cout &lt;&lt; *i &lt;&lt; std::endl; 
+  std::pair&lt;int*, std::size_t&gt; p = managed_shm.find&lt;int&gt;(&quot;Integer&quot;); 
+  if (p.first) 
+  { 
+    std::cout &lt;&lt; *p.first &lt;&lt; std::endl; 
+    std::cout &lt;&lt; p.second &lt;&lt; std::endl; 
+  } 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.3.2/main.cpp">下载源代码</a></li>
+</ul>
+<p>这次，通过在 <code>construct()</code>    函数后面给以用方括号括住的数字10，创建了一个10个元素的 <code>int</code> 类型的数组。 将    second    属性写到标准输出流，同样是这个数字<code>10</code>。    使用这个属性，<code>find()</code> 函数返回的对象能够区分是单个对象还是数组对象。    对于前者，second 的值是1，而对于后者，它的值是数组元素的个数。</p>
+<p>请注意数组中的所有元素被初始化为数值99。 不可能每个元素初始化为不同的值。</p>
+<p>如果给定名称的对象已经在托管的共享内存中存在，那么 <code>construct()</code> 将会失败。    在这种情况下，<code>construct()</code> 返回值是0。    如果存在的对象即使存在也可以被重用，<code>find_or_construct()</code>    函数可以调用，此函数返回一个指向它找到的对象的指针。 此时没有初始化动作发生。</p>
+<p>其他可以导致 <code>construct()</code> 失败的情况如下例所示。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  try 
+  { 
+    boost::interprocess::shared_memory_object::remove(&quot;Highscore&quot;); 
+    boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;Highscore&quot;, 1024); 
+    int *i = managed_shm.construct&lt;int&gt;(&quot;Integer&quot;)[4096](99); 
+  } 
+  catch (boost::interprocess::bad_alloc &amp;ex) 
+  { 
+    std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl; 
+  } 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.3.3/main.cpp">下载源代码</a></li>
+</ul>
+<p>应用程序尝试创建一个 <code>int</code> 类型的，包含4,096个元素的数组。 然而，共享内存只有1,024    字节，于是由于共享内存不能提供请求的内存，而抛出    <code>boost::interprocess::bad_alloc</code> 类型的异常。</p>
+<p>一旦对象已经在共享内存中创建，它们可以用 <code>destroy()</code> 函数删除。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::shared_memory_object::remove(&quot;Highscore&quot;); 
+  boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;Highscore&quot;, 1024); 
+  int *i = managed_shm.find_or_construct&lt;int&gt;(&quot;Integer&quot;)(99); 
+  std::cout &lt;&lt; *i &lt;&lt; std::endl; 
+  managed_shm.destroy&lt;int&gt;(&quot;Integer&quot;); 
+  std::pair&lt;int*, std::size_t&gt; p = managed_shm.find&lt;int&gt;(&quot;Integer&quot;); 
+  std::cout &lt;&lt; p.first &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.3.4/main.cpp">下载源代码</a></li>
+</ul>
+<p>由于它是一个参数的，要被删除对象的名称传递给 <code>destroy()</code> 函数。    如果需要，可以检查此函数的 <code>bool</code> 类型的返回值，以确定是否给定的对象被找到并成功删除。    由于对象如果被找到总是被删除，所以返回值 <code>false</code> 表示给定名称的对象没有找到。</p>
+<p>除了 <code>destroy()</code> 函数，还提供了另外一个函数    <code>destroy_ptr()</code>，它能够传递一个托管共享内存中的对象的指针，它也能用来删除数组。</p>
+<p>由于托管内存很容易用来存储在不同应用程序之间共享的对象，那么很自然就会使用到来自C++标准模板库的容器了。 这些容器需要用    <code>new</code> 这种方式来分配各自需要的内存。    为了在托管共享内存上使用这些容器，这就需要更加仔细地在共享内存上分配内存。</p>
+<p>可惜的是，许多C++标准模板库的实现并不太灵活，不能够提供 Boost.Interprocess 使用    <code>std::string</code> 或 <code>std::list</code> 的容器。    移植到 Microsoft Visual Studio 2008 的标准模板库实现就是一个例子。</p>
+<p>为了允许开发人员可以使用这些有名的来自C++标准的容器，Boost.Interprocess 在命名空间    <code>boost::interprocess</code> 下，提供了它们的更灵活的实现方式。    如，<code>boost::interprocess::string</code> 的行为实际上对应的是    <code>std::string</code>，优点是它的对象能够安全地存储在托管共享内存上。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;boost/interprocess/allocators/allocator.hpp&gt; 
+#include &lt;boost/interprocess/containers/string.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::shared_memory_object::remove(&quot;Highscore&quot;); 
+  boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;Highscore&quot;, 1024); 
+  typedef boost::interprocess::allocator&lt;char, boost::interprocess::managed_shared_memory::segment_manager&gt; CharAllocator; 
+  typedef boost::interprocess::basic_string&lt;char, std::char_traits&lt;char&gt;, CharAllocator&gt; string; 
+  string *s = managed_shm.find_or_construct&lt;string&gt;(&quot;String&quot;)(&quot;Hello!&quot;, managed_shm.get_segment_manager()); 
+  s-&gt;insert(5, &quot;, world&quot;); 
+  std::cout &lt;&lt; *s &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.3.5/main.cpp">下载源代码</a></li>
+</ul>
+<p>为了创建在托管共享内存上申请内存的字符串，必须为 Boost.Interprocess    提供的另外一个分配器定义对应的数据类型，而不是使用C++标准提供的缺省分配器。</p>
+<p>为了这个目的，Boost.Interprocess 在 <code>boost/interprocess/allocators/allocator.hpp</code>    文件中提供了 <code>boost::interprocess::allocator</code> 类的定义。    使用这个类，可以创建一个分配器，此分配器的内部使用的是“托管共享内存段管理器”。 段管理器负责管理位于托管共享内存之内的内存。 使用新建的分配器，与    string 相应的数据类型被定义了。 如上面所示，它使用    <code>boost::interprocess::basic_string</code> 而不是    <code>std::basic_string</code>。 上面例子中的新数据类型简单地命名为    <code>string</code>，它是基于    <code>boost::interprocess::basic_string</code> 并经过分配器访问段管理器。    为了让通过 <code>find_or_construct()</code> 创建的    <code>string</code>    特定实例，知道哪个段管理器应该被访问，相应的段管理器的指针传递给构造函数的第二个参数。</p>
+<p>与 <code>boost::interprocess::string</code> 一起,    Boost.Interprocess 还提供了许多其他C++标准中已知的容器。 如,    <code>boost::interprocess::vector</code> 和    <code>boost::interprocess::map</code>，分别定义在 <code>boost/interprocess/containers/vector.hpp</code> 和    <code>boost/interprocess/containers/map.hpp</code>文件中</p>
+<p>无论何时同一个托管共享内存被不同的应用程序访问，诸如创建，查找和销毁对象的操作是自动同步的。    如果两个应用程序尝试在托管共享内存上创建不同名称的对象，访问相应地被串行化了。 为了立刻执行多个操作而不被其他应用程序的操作打断，可以使用    <code>atomic_func()</code> 函数。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;boost/bind.hpp&gt; 
+#include &lt;iostream&gt; 
+
+void construct_objects(boost::interprocess::managed_shared_memory &amp;managed_shm) 
+{ 
+  managed_shm.construct&lt;int&gt;(&quot;Integer&quot;)(99); 
+  managed_shm.construct&lt;float&gt;(&quot;Float&quot;)(3.14); 
+} 
+
+int main() 
+{ 
+  boost::interprocess::shared_memory_object::remove(&quot;Highscore&quot;); 
+  boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;Highscore&quot;, 1024); 
+  managed_shm.atomic_func(boost::bind(construct_objects, boost::ref(managed_shm))); 
+  std::cout &lt;&lt; *managed_shm.find&lt;int&gt;(&quot;Integer&quot;).first &lt;&lt; std::endl; 
+  std::cout &lt;&lt; *managed_shm.find&lt;float&gt;(&quot;Float&quot;).first &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.3.6/main.cpp">下载源代码</a></li>
+</ul>
+<p><code>atomic_func()</code> 需要一个无参数，无返回值的函数作为它的参数。    被传递的函数将以以一种确保排他访问托管共享内存的方式被调用，但仅限于对象的创建，查找和销毁操作。    如果另一个应用程序有一个指向托管内存中对象的指针，它还是可以使用这个指针修改该对象的。</p>
+<p>Boost.Interprocess 也可以用来同步对象的访问。 由于 Boost.Interprocess    不知道在任意一个时间点谁可以访问某个对象，所以同步需要明确的状态标志，下一节介绍这些类提供的同步方式。</p>
+<hr />
+<h2 id="84-同步"><a class="header" href="#84-同步">8.4. 同步</a></h2>
+<p>Boost.Interprocess 允许多个应用程序并发使用共享内存。 由于共享内存被定义为在应用程序之间“共享”，所以    Boost.Interprocess 需要支持一些同步方式。</p>
+<p>当考虑到同步的时候，Boost.Thread 当然浮现在脑海里。 正如在 <a href="./multithreading.html">第 6 章 <em>多线程</em></a> 所见，Boost.Thread 确实提供了各种概念，如互斥对象和条件变量来同步线程。    可惜的是，这些类只能用来同步同一个应用程序内的线程，它们不支持同步不同的应用程序。 由于二者面临的问题相同，所以在概念上没有什么差别。</p>
+<p>当诸如互斥对象和条件变量等同步对象位于一个多线程的应用程序的同一地址空间内时，当然它们对于所有线程都是可以访问的，而在共享内存方面的问题是不同的应用程序需要在彼此之间正确地共享这些对象。    例如，如果一个应用程序创建一个互斥对象，它有时候需要从另外一个应用程序访问此对象。</p>
+<p>Boost.Interprocess 提供了两种同步对象，匿名对象被直接存储在共享内存上，这使得他们自动对所有应用程序可用。    命名对象由操作系统管理，所以它们不存储在共享内存上，它们可以被应用程序通过名称访问。</p>
+<p>接下来的例子通过 <code>boost::interprocess::named_mutex</code>    创建并使用一个命名互斥对象，此类定义在 <code>boost/interprocess/sync/named_mutex.hpp</code>    文件中。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;boost/interprocess/sync/named_mutex.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;shm&quot;, 1024); 
+  int *i = managed_shm.find_or_construct&lt;int&gt;(&quot;Integer&quot;)(); 
+  boost::interprocess::named_mutex named_mtx(boost::interprocess::open_or_create, &quot;mtx&quot;); 
+  named_mtx.lock(); 
+  ++(*i); 
+  std::cout &lt;&lt; *i &lt;&lt; std::endl; 
+  named_mtx.unlock(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.4.1/main.cpp">下载源代码</a></li>
+</ul>
+<p>除了一个参数用来指定互斥对象是被创建或者打开之外，<code>boost::interprocess::named_mutex</code>    的构造函数还需要一个名称参数。 每个知道此名称的应用程序能够访问这同一个对象。 为了获得对位于共享内存中数据的访问，应用程序需要通过调用    <code>lock()</code> 函数获得互斥对象的拥有关系。    由于互斥对象在任意时刻只能被一个应用程序拥有，其他应用程序需要等待，直到互斥对象被第一个应用程序使用    <code>lock()</code> 函数释放。 一旦应用程序获得互斥对象的所有权，它可以获得互斥对象保护的资源的排他访问。    在上面例子中，资源是<code>int</code>类的变量被递增并写到标准输出流中。</p>
+<p>如果应用程序被启动多次，每个实例都会打印出和前一个值比较递增1的值。    感谢互斥对象，访问共享内存和变量本身在多个应用程序之间是同步的。</p>
+<p>接下来的应用程序使用了定义在 <code>boost/interprocess/sync/interprocess_mutex.hpp</code>    文件中的 <code>boost::interprocess::interprocess_mutex</code>    类的匿名对象。 为了可以被所有应用程序访问，它存储在共享内存中。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;boost/interprocess/sync/interprocess_mutex.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;shm&quot;, 1024); 
+  int *i = managed_shm.find_or_construct&lt;int&gt;(&quot;Integer&quot;)(); 
+  boost::interprocess::interprocess_mutex *mtx = managed_shm.find_or_construct&lt;boost::interprocess::interprocess_mutex&gt;(&quot;mtx&quot;)(); 
+  mtx-&gt;lock(); 
+  ++(*i); 
+  std::cout &lt;&lt; *i &lt;&lt; std::endl; 
+  mtx-&gt;unlock(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.4.2/main.cpp">下载源代码</a></li>
+</ul>
+<p>这个应用程序的行为确实和前一个有点像。 唯一的不同是这次互斥对象通过用    <code>boost::interprocess::managed_shared_memory</code> 类的    <code>construct()</code> 或    <code>find_or_construct()</code> 函数被直接存储在共享内存中。</p>
+<p>除了 <code>lock()</code>    函数，<code>boost::interprocess::named_mutex</code> 和    <code>boost::interprocess::interprocess_mutex</code> 还提供了    <code>try_lock()</code> 和 <code>timed_lock()</code>    函数。 它们的行为和Boost.Thread提供的互斥对象相对应。</p>
+<p>在需要递归互斥对象的时候，Boost.Interprocess 提供    <code>boost::interprocess::named_recursive_mutex</code> 和    <code>boost::interprocess::interprocess_mutex</code>    两个对象可供使用。</p>
+<p>在互斥对象保证共享资源的排他访问的时候，条件变量控制了在什么时候，谁必须具有排他访问权。 一般来讲，Boost.Interprocess    和 Boost.Thread 提供的条件变量工作方式相同。 它们有非常相似的接口，使熟悉 Boost.Thread 的用户在使用    Boost.Interprocess 的这些条件变量时立刻有一种自在的感觉。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;boost/interprocess/sync/named_mutex.hpp&gt; 
+#include &lt;boost/interprocess/sync/named_condition.hpp&gt; 
+#include &lt;boost/interprocess/sync/scoped_lock.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;shm&quot;, 1024); 
+  int *i = managed_shm.find_or_construct&lt;int&gt;(&quot;Integer&quot;)(0); 
+  boost::interprocess::named_mutex named_mtx(boost::interprocess::open_or_create, &quot;mtx&quot;); 
+  boost::interprocess::named_condition named_cnd(boost::interprocess::open_or_create, &quot;cnd&quot;); 
+  boost::interprocess::scoped_lock&lt;boost::interprocess::named_mutex&gt; lock(named_mtx); 
+  while (*i &lt; 10) 
+  { 
+    if (*i % 2 == 0) 
+    { 
+      ++(*i); 
+      named_cnd.notify_all(); 
+      named_cnd.wait(lock); 
+    } 
+    else 
+    { 
+      std::cout &lt;&lt; *i &lt;&lt; std::endl; 
+      ++(*i); 
+      named_cnd.notify_all(); 
+      named_cnd.wait(lock); 
+    } 
+  } 
+  named_cnd.notify_all(); 
+  boost::interprocess::shared_memory_object::remove(&quot;shm&quot;); 
+  boost::interprocess::named_mutex::remove(&quot;mtx&quot;); 
+  boost::interprocess::named_condition::remove(&quot;cnd&quot;); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.4.3/main.cpp">下载源代码</a></li>
+</ul>
+<p>例子中使用的条件变量的类型    <code>boost::interprocess::named_condition</code>，定义在 <code>boost/interprocess/sync/named_condition.hpp</code>    文件中。 由于它是命名变量，所以它不需要存储在共享内存。</p>
+<p>应用程序使用 <code>while</code> 循环递增一个存储在共享内存中的 <code>int</code>    类型变量而变量是在每个循环内重复递增，而它只在每两个循环时写出到标准输出中：写出的只能是奇数。</p>
+<p>每次，在变量递增1之后，条件变量 named_cnd 的 <code>wait    ()</code>函数被调用。 一个称作锁，在此例中是变量 lock 被传递给此函数。 这个锁和    Boost.Thread 中的锁含义相同：基于RAII概念的在构造函数中获得互斥对象的所有权,并在析构函数中释放它。</p>
+<p>在 <code>while</code> 之前创建的锁因而在整个应用程序执行期间拥有互斥对象的所有权。 可是，如果作为一个参数传递给    <code>wait()</code> 函数，它会被自动释放。</p>
+<p>条件变量常常用来等待一个信号，此信号会指示等待现在到了。 同步是通过 <code>wait()</code> 和    <code>notify_all()</code> 函数控制的。 如果一个应用程序调用    <code>wait()</code> 函数，一直到对应的条件变量的    <code>notify_all()</code> 函数被调用，相应的互斥对象的所有权才会被被释放。</p>
+<p>如果启动此程序，它看上去什么也没做：而只是变量在 <code>while</code> 循环内从0递增到1，然后应用程序使用    <code>wait()</code> 等待信号。 为了提供这个信号，应用程序需要再启动第二个实例。</p>
+<p>应用程序的第二个实例将会在进入 <code>while</code> 循环之前，尝试获得同一个互斥对象的所有权。    这肯定是成功的，由于应用程序的第一个实例通过调用 <code>wait()</code> 释放了互斥对象的所有权。    因为变量已经递增了一次，第二个实例现在会执行 <code>if</code> 表达式的 <code>else</code>    分支，这使得在递增1之前将当前值写到标准输出流。</p>
+<p>现在，第二个实例也调用了 <code>wait()</code> 函数，可是，在调用之前,它调用了    <code>notify_all()</code> 函数，这对于两个实例正确协作是非常重要的顺序。    第一个实例被通知并再次尝试获得互斥对象的所有权，虽然现在它还被第二个实例所拥有。 由于第二个实例在调用    <code>notify_all()</code> 之后调用了    <code>wait()</code>，这自动释放了所有权，第一个实例此时能够获得所有权。</p>
+<p>两个实例交替地递增共享内存中的变量。 仅有一个实例将变量值写到标准输出流。 只要变量值到达10，<code>while</code>    循环结束。 为了让其他实例不必永远等待信号， <code>notify_all()</code> 函数在循环之后又被调用了一次。    在终止之前，共享内存，互斥对象和条件变量都被销毁。</p>
+<p>就像有两种互斥对象，即必须存储在共享内存中匿名类型和命名类型，也存在两种类型的条件变量。    现在用匿名条件变量重写上面的例子。</p>
+<pre><code class="language-c++">#include &lt;boost/interprocess/managed_shared_memory.hpp&gt; 
+#include &lt;boost/interprocess/sync/interprocess_mutex.hpp&gt; 
+#include &lt;boost/interprocess/sync/interprocess_condition.hpp&gt; 
+#include &lt;boost/interprocess/sync/scoped_lock.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  try 
+  { 
+    boost::interprocess::managed_shared_memory managed_shm(boost::interprocess::open_or_create, &quot;shm&quot;, 1024); 
+    int *i = managed_shm.find_or_construct&lt;int&gt;(&quot;Integer&quot;)(0); 
+    boost::interprocess::interprocess_mutex *mtx = managed_shm.find_or_construct&lt;boost::interprocess::interprocess_mutex&gt;(&quot;mtx&quot;)(); 
+    boost::interprocess::interprocess_condition *cnd = managed_shm.find_or_construct&lt;boost::interprocess::interprocess_condition&gt;(&quot;cnd&quot;)(); 
+    boost::interprocess::scoped_lock&lt;boost::interprocess::interprocess_mutex&gt; lock(*mtx); 
+    while (*i &lt; 10) 
+    { 
+      if (*i % 2 == 0) 
+      { 
+        ++(*i); 
+        cnd-&gt;notify_all(); 
+        cnd-&gt;wait(lock); 
+      } 
+      else 
+      { 
+        std::cout &lt;&lt; *i &lt;&lt; std::endl; 
+        ++(*i); 
+        cnd-&gt;notify_all(); 
+        cnd-&gt;wait(lock); 
+      } 
+    } 
+    cnd-&gt;notify_all(); 
+  } 
+  catch (...) 
+  { 
+  } 
+  boost::interprocess::shared_memory_object::remove(&quot;shm&quot;); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/8.4.4/main.cpp">下载源代码</a></li>
+</ul>
+<p>这个应用程序的工作完全和前一个例子一样，为了递增变量10次，因而也需要启动两个实例。 两个例子之间的差别很小。    与是否使用匿名或命名条件变量根本没有什么关系。</p>
+<p>处理互斥对象和条件变量，Boost.Interprocess 还提供了叫做信号量和文件锁。    信号量的行为和条件变量相似，除了它不能区别两种状态，但它确是基于计数器的。    文件锁有些像互斥对象，虽然它们不是关于内存的对象，但它们确是文件系统上关于文件的对象。</p>
+<p>就像 Boost.Thread 能够区分不同的互斥对象和锁，Boost.Interprocess 也提供了几个互斥对象和锁。    例如，互斥对象不仅能被排他地拥有，也可以不排他地所有。 这在多个应用程序需要同时读而排他写的时候非常有用。    对于不同的互斥对象，可以使用不同的具有RAII概念的锁类。</p>
+<p>请注意如果不使用匿名同步对象，那么名称应该是唯一的。 虽然互斥对象和条件变量是基于不同类的对象，但也不必总是认为操作系统独立的接口是由    Boost.Interprocess 区别对待的。 在Windows系统上，互斥对象和条件变量使用同样的系统函数。    如果这两种对象使用相同的名称，那么应用程序在Windows上将不会正确地址执行。</p>
+<hr />
+<h2 id="85-练习"><a class="header" href="#85-练习">8.5. 练习</a></h2>
+<p>​              You can buy               <a href="http://en.highscore.de/shop/index.php?p=boost-solution">solutions to all exercises</a>              in this book as a ZIP file.</p>
+<ol>
+<li>创建一个通过共享内存通讯的客户端/服务器应用程序。 文件名称应该作为命令行参数传递给客户端应用程序。        这个文件存储在服务器端应用程序启动的目录下，这个文件应经由共享内存发送给服务器端应用程序。</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="asio.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="filesystem.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="asio.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="filesystem.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

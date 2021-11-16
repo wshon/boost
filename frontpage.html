@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>导言 - Boost C++ 库</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="frontpage.html" class="active"><strong aria-hidden="true">1.</strong> 导言</a></li><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">2.</strong> 第 1 章 简介</a></li><li class="chapter-item expanded "><a href="smartpointers.html"><strong aria-hidden="true">3.</strong> 第 2 章 智能指针</a></li><li class="chapter-item expanded "><a href="functionobjects.html"><strong aria-hidden="true">4.</strong> 第 3 章 函数对象</a></li><li class="chapter-item expanded "><a href="eventhandling.html"><strong aria-hidden="true">5.</strong> 第 4 章 事件处理</a></li><li class="chapter-item expanded "><a href="stringhandling.html"><strong aria-hidden="true">6.</strong> 第 5 章 字符串处理</a></li><li class="chapter-item expanded "><a href="multithreading.html"><strong aria-hidden="true">7.</strong> 第 6 章 多线程</a></li><li class="chapter-item expanded "><a href="asio.html"><strong aria-hidden="true">8.</strong> 第 7 章 异步输入输出</a></li><li class="chapter-item expanded "><a href="interprocesscommunication.html"><strong aria-hidden="true">9.</strong> 第 8 章 进程间通讯</a></li><li class="chapter-item expanded "><a href="filesystem.html"><strong aria-hidden="true">10.</strong> 第 9 章 文件系统</a></li><li class="chapter-item expanded "><a href="datetime.html"><strong aria-hidden="true">11.</strong> 第 10 章 日期与时间</a></li><li class="chapter-item expanded "><a href="serialization.html"><strong aria-hidden="true">12.</strong> 第 11 章 序列化</a></li><li class="chapter-item expanded "><a href="parser.html"><strong aria-hidden="true">13.</strong> 第 12 章 词法分析器</a></li><li class="chapter-item expanded "><a href="containers.html"><strong aria-hidden="true">14.</strong> 第 13 章 容器</a></li><li class="chapter-item expanded "><a href="datastructures.html"><strong aria-hidden="true">15.</strong> 第 14 章 数据结构</a></li><li class="chapter-item expanded "><a href="errorhandling.html"><strong aria-hidden="true">16.</strong> 第 15 章 错误处理</a></li><li class="chapter-item expanded "><a href="castoperators.html"><strong aria-hidden="true">17.</strong> 第 16 章 类型转换操作符</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Boost C++ 库</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="boost-c-库"><a class="header" href="#boost-c-库">Boost C++ 库</a></h1>
+<p><a href="http://creativecommons.org/licenses/by-nc-nd/3.0/de/deed.zh"><img src="http://zh.highscore.de/cpp/boost/img/88x31_cc_logo.gif" alt="img" /></a> 该书采用 <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/de/deed.zh">Creative Commons License</a> 授权</p>
+<p>本书的中文版由           <a href="mailto:alai04@gmail.com">Albert Lai</a>, <a href="mailto:jerry2mouse@gmail.com">Jerry Guo</a>, <a href="mailto:zengkun100@gmail.com">Kun Zeng</a>, <a href="mailto:chenclf@vrlab.cau.ac.kr">Liangfu Chen</a> (<a href="http://vrlab.cau.ac.kr/%7Echenclf/">主页</a>), <a href="mailto:watsoncui@gmail.com">Cui Wei</a> 和 <a href="mailto:shiruide@gmail.com">Rui Shi</a>          翻译。</p>
+<hr />
+<h2 id="内容"><a class="header" href="#内容">内容</a></h2>
+<h3 id="你将学到些什么"><a class="header" href="#你将学到些什么">你将学到些什么</a></h3>
+<p>本书是对 Boost C++ 库的介绍，Boost 库通过加入一些在实践中非常有用的函数对 C++ 标准进行了补充。 由于 Boost C++ 库是基于 C++ 标准的，所以它们是使用最先进的 C++ 来实现的。 它们是平台独立的，并由于有一个大型的开发人员社区，它可以被包括 Windows 和 Linux 在内的许多操作系统所支持。</p>
+<p>Boost C++ 库可以提升你作为一个 C++ 开发人员的生产力。 例如，你可以从智能指针中受益，帮助你写出更可靠的代码，或者使用某个库来开发平台独立的网络应用。 因为多数 Boost C++ 库正被收录进下一个版本的 C++ 标准，所以你可以从今天就开始作好准备。</p>
+<hr />
+<h2 id="要求"><a class="header" href="#要求">要求</a></h2>
+<h3 id="你应该懂得些什么"><a class="header" href="#你应该懂得些什么">你应该懂得些什么</a></h3>
+<p>因为 Boost C++ 库是基于且扩展了 C++ 标准，所以你应该懂得 C++ 标准。 你应该了解且能够使用容器、迭代器及算法，最好有听说过以下概念：RAII，函数对象，或是谓词。 你越是了解 C++ 标准，就越能从 Boost C++ 库中受益。</p>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="next" href="introduction.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="next" href="introduction.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

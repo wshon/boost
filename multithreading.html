@@ -1,0 +1,661 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>第 6 章 多线程 - Boost C++ 库</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="frontpage.html"><strong aria-hidden="true">1.</strong> 导言</a></li><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">2.</strong> 第 1 章 简介</a></li><li class="chapter-item expanded "><a href="smartpointers.html"><strong aria-hidden="true">3.</strong> 第 2 章 智能指针</a></li><li class="chapter-item expanded "><a href="functionobjects.html"><strong aria-hidden="true">4.</strong> 第 3 章 函数对象</a></li><li class="chapter-item expanded "><a href="eventhandling.html"><strong aria-hidden="true">5.</strong> 第 4 章 事件处理</a></li><li class="chapter-item expanded "><a href="stringhandling.html"><strong aria-hidden="true">6.</strong> 第 5 章 字符串处理</a></li><li class="chapter-item expanded "><a href="multithreading.html" class="active"><strong aria-hidden="true">7.</strong> 第 6 章 多线程</a></li><li class="chapter-item expanded "><a href="asio.html"><strong aria-hidden="true">8.</strong> 第 7 章 异步输入输出</a></li><li class="chapter-item expanded "><a href="interprocesscommunication.html"><strong aria-hidden="true">9.</strong> 第 8 章 进程间通讯</a></li><li class="chapter-item expanded "><a href="filesystem.html"><strong aria-hidden="true">10.</strong> 第 9 章 文件系统</a></li><li class="chapter-item expanded "><a href="datetime.html"><strong aria-hidden="true">11.</strong> 第 10 章 日期与时间</a></li><li class="chapter-item expanded "><a href="serialization.html"><strong aria-hidden="true">12.</strong> 第 11 章 序列化</a></li><li class="chapter-item expanded "><a href="parser.html"><strong aria-hidden="true">13.</strong> 第 12 章 词法分析器</a></li><li class="chapter-item expanded "><a href="containers.html"><strong aria-hidden="true">14.</strong> 第 13 章 容器</a></li><li class="chapter-item expanded "><a href="datastructures.html"><strong aria-hidden="true">15.</strong> 第 14 章 数据结构</a></li><li class="chapter-item expanded "><a href="errorhandling.html"><strong aria-hidden="true">16.</strong> 第 15 章 错误处理</a></li><li class="chapter-item expanded "><a href="castoperators.html"><strong aria-hidden="true">17.</strong> 第 16 章 类型转换操作符</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Boost C++ 库</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="第-6-章-多线程"><a class="header" href="#第-6-章-多线程">第 6 章 多线程</a></h1>
+<h2 id="61-概述"><a class="header" href="#61-概述">6.1. 概述</a></h2>
+<p>线程就是，在同一程序同一时间内允许执行不同函数的离散处理队列。    这使得一个长时间去进行某种特殊运算的函数在执行时不阻碍其他的函数变得十分重要。    线程实际上允许同时执行两种函数，而这两个函数不必相互等待。</p>
+<p>一旦一个应用程序启动，它仅包含一个默认线程。 此线程执行 <code>main()</code> 函数。 在    <code>main()</code>中被调用的函数则按这个线程的上下文顺序地执行。 这样的程序称为单线程程序。</p>
+<p>反之，那些创建新的线程的程序就是多线程程序。 他们不仅可以在同一时间执行多个函数，而且这在如今多核盛行的时代显得尤为重要。    既然多核允许同时执行多个函数，这就使得对开发人员相应地使用这种处理能力提出了要求。    然而线程一直被用来当并发地执行多个函数，开发人员现在不得不仔细地构建应用来支持这种并发。    多线程编程知识也因此在多核系统时代变得越来越重要。</p>
+<p>本章将介绍C++ Boost库 <a href="http://www.boost.org/libs/thread/">Boost.Thread</a>，它可以开发独立于平台的多线程应用程序。</p>
+<hr />
+<h2 id="62-线程管理"><a class="header" href="#62-线程管理">6.2. 线程管理</a></h2>
+<p>在这个库最重要的一个类就是 <code>boost::thread</code>，它是在 <code>boost/thread.hpp</code>    里定义的，用来创建一个新线程。下面的示例来说明如何运用它。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+
+void wait(int seconds) 
+{ 
+  boost::this_thread::sleep(boost::posix_time::seconds(seconds)); 
+} 
+
+void thread() 
+{ 
+  for (int i = 0; i &lt; 5; ++i) 
+  { 
+    wait(1); 
+    std::cout &lt;&lt; i &lt;&lt; std::endl; 
+  } 
+} 
+
+int main() 
+{ 
+  boost::thread t(thread); 
+  t.join(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.2.1/main.cpp">下载源代码</a></li>
+</ul>
+<p>新建线程里执行的那个函数的名称被传递到 <code>boost::thread</code> 的构造函数。    一旦上述示例中的变量 t 被创建，该 <code>thread()</code>    函数就在其所在线程中被立即执行。 同时在 <code>main()</code> 里也并发地执行该    <code>thread()</code> 。</p>
+<p>为了防止程序终止，就需要对新建线程调用 <code>join()</code> 方法。    <code>join()</code> 方法是一个阻塞调用：它可以暂停当前线程，直到调用    <code>join()</code> 的线程运行结束。 这就使得 <code>main()</code>    函数一直会等待到 <code>thread()</code> 运行结束。</p>
+<p>正如在上面的例子中看到，一个特定的线程可以通过诸如 t 的变量访问，通过这个变量等待着它的使用    <code>join()</code> 方法终止。 但是，即使 t    越界或者析构了，该线程也将继续执行。 一个线程总是在一开始就绑定到一个类型为    <code>boost::thread</code> 的变量，但是一旦创建，就不在取决于它。 甚至还存在着一个叫    <code>detach()</code> 的方法，允许类型为    <code>boost::thread</code> 的变量从它对应的线程里分离。 当然了，像    <code>join()</code> 的方法之后也就不能被调用，因为这个变量不再是一个有效的线程。</p>
+<p>任何一个函数内可以做的事情也可以在一个线程内完成。 归根结底，一个线程只不过是一个函数，除了它是同时执行的。    在上述例子中，使用一个循环把5个数字写入标准输出流。 为了减缓输出，每一个循环中调用 <code>wait()</code>    函数让执行延迟了一秒。 <code>wait()</code> 可以调用一个名为 <code>sleep()</code>    的函数，这个函数也来自于 Boost.Thread，位于 <code>boost::this_thread</code> 名空间内。</p>
+<p><code>sleep()</code> 要么在预计的一段时间或一个特定的时间点后时才让线程继续执行。 通过传递一个类型为    <code>boost::posix_time::seconds</code> 的对象，在这个例子里我们指定了一段时间。    <code>boost::posix_time::seconds</code> 来自于 Boost.DateTime 库，它被    Boost.Thread 用来管理和处理时间的数据。</p>
+<p>虽然前面的例子说明了如何等待一个不同的线程，但下面的例子演示了如何通过所谓的中断点让一个线程中断。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+
+void wait(int seconds) 
+{ 
+  boost::this_thread::sleep(boost::posix_time::seconds(seconds)); 
+} 
+
+void thread() 
+{ 
+  try 
+  { 
+    for (int i = 0; i &lt; 5; ++i) 
+    { 
+      wait(1); 
+      std::cout &lt;&lt; i &lt;&lt; std::endl; 
+    } 
+  } 
+  catch (boost::thread_interrupted&amp;) 
+  { 
+  } 
+} 
+
+int main() 
+{ 
+  boost::thread t(thread); 
+  wait(3); 
+  t.interrupt(); 
+  t.join(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.2.2/main.cpp">下载源代码</a></li>
+</ul>
+<p>在一个线程对象上调用 <code>interrupt()</code> 会中断相应的线程。    在这方面，中断意味着一个类型为 <code>boost::thread_interrupted</code>    的异常，它会在这个线程中抛出。 然后这只有在线程达到中断点时才会发生。</p>
+<p>如果给定的线程不包含任何中断点，简单调用 <code>interrupt()</code> 就不会起作用。    每当一个线程中断点，它就会检查 <code>interrupt()</code> 是否被调用过。 只有被调用过了，    <code>boost::thread_interrupted</code> 异常才会相应地抛出。</p>
+<p>Boost.Thread定义了一系列的中断点，例如 <code>sleep()</code> 函数。 由于    <code>sleep()</code> 在这个例子里被调用了五次，该线程就检查了五次它是否应该被中断。 然而    <code>sleep()</code> 之间的调用，却不能使线程中断。</p>
+<p>一旦该程序被执行，它只会打印三个数字到标准输出流。 这是由于在main里3秒后调用    <code>interrupt()</code>方法。 因此，相应的线程被中断，并抛出一个    <code>boost::thread_interrupted</code> 异常。 这个异常在线程内也被正确地捕获，    <code>catch</code> 处理虽然是空的。 由于 <code>thread()</code>    函数在处理程序后返回，线程也被终止。 这反过来也将终止整个程序，因为 <code>main()</code>    等待该线程使用join（）终止该线程。</p>
+<p>Boost.Thread定义包括上述 <code>sleep()</code>函数十个中断。    有了这些中断点，线程可以很容易及时中断。 然而，他们并不总是最佳的选择，因为中断点必须事前读入以检查    <code>boost::thread_interrupted</code> 异常。</p>
+<p>为了提供一个对 Boost.Thread 里提供的多种函数的整体概述，下面的例子将会再介绍两个。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  std::cout &lt;&lt; boost::this_thread::get_id() &lt;&lt; std::endl; 
+  std::cout &lt;&lt; boost::thread::hardware_concurrency() &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.2.3/main.cpp">下载源代码</a></li>
+</ul>
+<p>使用 <code>boost::this_thread</code>命名空间，能提供独立的函数应用于当前线程，比如前面出现的    <code>sleep()</code> 。 另一个是    <code>get_id()</code>：它会返回一个当前线程的ID号。 它也是由    <code>boost::thread</code> 提供的。</p>
+<p><code>boost::thread</code> 类提供了一个静态方法    <code>hardware_concurrency()</code>    ，它能够返回基于CPU数目或者CPU内核数目的刻在同时在物理机器上运行的线程数。 在常用的双核机器上调用这个方法，返回值为2。    这样的话就可以确定在一个多核程序可以同时运行的理论最大线程数。</p>
+<hr />
+<h2 id="63-同步"><a class="header" href="#63-同步">6.3. 同步</a></h2>
+<p>虽然多线程的使用可以提高应用程序的性能，但也增加了复杂性。 如果使用线程在同一时间执行几个函数，访问共享资源时必须相应地同步。    一旦应用达到了一定规模，这涉及相当一些工作。 本段介绍了Boost.Thread提供同步线程的类。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+
+void wait(int seconds) 
+{ 
+  boost::this_thread::sleep(boost::posix_time::seconds(seconds)); 
+} 
+
+boost::mutex mutex; 
+
+void thread() 
+{ 
+  for (int i = 0; i &lt; 5; ++i) 
+  { 
+    wait(1); 
+    mutex.lock(); 
+    std::cout &lt;&lt; &quot;Thread &quot; &lt;&lt; boost::this_thread::get_id() &lt;&lt; &quot;: &quot; &lt;&lt; i &lt;&lt; std::endl; 
+    mutex.unlock(); 
+  } 
+} 
+
+int main() 
+{ 
+  boost::thread t1(thread); 
+  boost::thread t2(thread); 
+  t1.join(); 
+  t2.join(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.3.1/main.cpp">下载源代码</a></li>
+</ul>
+<p>多线程程序使用所谓的互斥对象来同步。    Boost.Thread提供多个的互斥类，<code>boost::mutex</code>是最简单的一个。    互斥的基本原则是当一个特定的线程拥有资源的时候防止其他线程夺取其所有权。 一旦释放，其他的线程可以取得所有权。    这将导致线程等待至另一个线程完成处理一些操作，从而相应地释放互斥对象的所有权。</p>
+<p>上面的示例使用一个类型为 <code>boost::mutex</code> 的    mutex 全局互斥对象。 <code>thread()</code> 函数获取此对象的所有权才在    <code>for</code> 循环内使用 <code>lock()</code> 方法写入到标准输出流的。    一旦信息被写入，使用 <code>unlock()</code> 方法释放所有权。</p>
+<p><code>main()</code> 创建两个线程，同时执行 <code>thread    ()</code>函数。 利用<code> for</code> 循环，每个线程数到5，用一个迭代器写一条消息到标准输出流。    不幸的是，标准输出流是一个全局性的被所有线程共享的对象。 该标准不提供任何保证 std::cout    可以安全地从多个线程访问。 因此，访问标准输出流必须同步：在任何时候，只有一个线程可以访问    std::cout。</p>
+<p>由于两个线程试图在写入标准输出流前获得互斥体，实际上只能保证一次只有一个线程访问    std::cout。 不管哪个线程成功调用 <code>lock()</code>    方法，其他所有线程必须等待，直到 <code>unlock()</code> 被调用。</p>
+<p>获取和释放互斥体是一个典型的模式，是由Boost.Thread通过不同的数据类型支持。 例如，不直接地调用    <code>lock()</code> 和 <code>unlock()</code>，使用    <code>boost::lock_guard</code> 类也是可以的。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+
+void wait(int seconds) 
+{ 
+  boost::this_thread::sleep(boost::posix_time::seconds(seconds)); 
+} 
+
+boost::mutex mutex; 
+
+void thread() 
+{ 
+  for (int i = 0; i &lt; 5; ++i) 
+  { 
+    wait(1); 
+    boost::lock_guard&lt;boost::mutex&gt; lock(mutex); 
+    std::cout &lt;&lt; &quot;Thread &quot; &lt;&lt; boost::this_thread::get_id() &lt;&lt; &quot;: &quot; &lt;&lt; i &lt;&lt; std::endl; 
+  } 
+} 
+
+int main() 
+{ 
+  boost::thread t1(thread); 
+  boost::thread t2(thread); 
+  t1.join(); 
+  t2.join(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.3.2/main.cpp">下载源代码</a></li>
+</ul>
+<p><code>boost::lock_guard</code> 在其内部构造和析构函数分别自动调用    <code>lock()</code> 和 <code>unlock()</code> 。    访问共享资源是需要同步的，因为它显示地被两个方法调用。 <code>boost::lock_guard</code>    类是另一个出现在 <a href="./smartpointers.html">第 2 章 <em>智能指针</em></a> 的RAII用语。</p>
+<p>除了<code>boost::mutex</code> 和    <code>boost::lock_guard</code> 之外，Boost.Thread也提供其他的类支持各种同步。    其中一个重要的就是 <code>boost::unique_lock</code> ，相比较<code>   boost::lock_guard</code>而言，它提供许多有用的方法。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+
+void wait(int seconds) 
+{ 
+  boost::this_thread::sleep(boost::posix_time::seconds(seconds)); 
+} 
+
+boost::timed_mutex mutex; 
+
+void thread() 
+{ 
+  for (int i = 0; i &lt; 5; ++i) 
+  { 
+    wait(1); 
+    boost::unique_lock&lt;boost::timed_mutex&gt; lock(mutex, boost::try_to_lock); 
+    if (!lock.owns_lock()) 
+      lock.timed_lock(boost::get_system_time() + boost::posix_time::seconds(1)); 
+    std::cout &lt;&lt; &quot;Thread &quot; &lt;&lt; boost::this_thread::get_id() &lt;&lt; &quot;: &quot; &lt;&lt; i &lt;&lt; std::endl; 
+    boost::timed_mutex *m = lock.release(); 
+    m-&gt;unlock(); 
+  } 
+} 
+
+int main() 
+{ 
+  boost::thread t1(thread); 
+  boost::thread t2(thread); 
+  t1.join(); 
+  t2.join(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.3.3/main.cpp">下载源代码</a></li>
+</ul>
+<p>上面的例子用不同的方法来演示 <code>boost::unique_lock</code> 的功能。    当然了，这些功能的用法对给定的情景不一定适用；<code>boost::lock_guard</code>    在上个例子的用法还是挺合理的。 这个例子就是为了演示 <code>boost::unique_lock</code>    提供的功能。</p>
+<p><code>boost::unique_lock</code> 通过多个构造函数来提供不同的方式获得互斥体。    这个期望获得互斥体的函数简单地调用了 <code>lock()</code> 方法，一直等到获得这个互斥体。 所以它的行为跟    <code>boost::lock_guard</code> 的那个是一样的。</p>
+<p>如果第二个参数传入一个 <code>boost::try_to_lock</code> 类型的值，对应的构造函数就会调用    <code>try_lock()</code> 方法。 这个方法返回 <code>bool</code>    型的值：如果能够获得互斥体则返回<code>true</code>，否则返回 <code>false</code> 。 相比    <code>lock()</code> 函数，<code>try_lock()</code>    会立即返回，而且在获得互斥体之前不会被阻塞。</p>
+<p>上面的程序向 <code>boost::unique_lock</code>    的构造函数的第二个参数传入boost::try_to_lock。 然后通过    <code>owns_lock()</code> 可以检查是否可获得互斥体。 如果不能，    <code>owns_lock()</code> 返回 <code>false</code>。 这也用到    <code>boost::unique_lock</code> 提供的另外一个函数：    <code>timed_lock()</code> 等待一定的时间以获得互斥体。    给定的程序等待长达1秒，应较足够的时间来获取更多的互斥。</p>
+<p>其实这个例子显示了三个方法获取一个互斥体：<code>lock()</code> 会一直等待，直到获得一个互斥体。    <code>try_lock()</code> 则不会等待，但如果它只会在互斥体可用的时候才能获得，否则返回    <code>false</code> 。 最后，<code>timed_lock()</code>    试图获得在一定的时间内获取互斥体。 和 <code>try_lock()</code>    一样，返回<code>bool</code> 类型的值意味着成功是否。</p>
+<p>虽然 <code>boost::mutex</code> 提供了    <code>lock()</code> 和 <code>try_lock()</code> 两个方法，但是    <code>boost::timed_mutex</code> 只支持    <code>timed_lock()</code> ，这就是上面示例那么使用的原因。 如果不用    <code>timed_lock()</code> 的话，也可以像以前的例子那样用    <code>boost::mutex</code>。</p>
+<p>就像 <code>boost::lock_guard</code> 一样，    <code>boost::unique_lock</code> 的析构函数也会相应地释放互斥量。此外，可以手动地用    <code>unlock()</code> 释放互斥量。也可以像上面的例子那样，通过调用    <code>release()</code>    解除<code>boost::unique_lock</code> 和互斥量之间的关联。然而在这种情况下，必须显式地调用    <code>unlock()</code> 方法来释放互斥量，因为    <code>boost::unique_lock</code> 的析构函数不再做这件事情。</p>
+<p><code>boost::unique_lock</code>    这个所谓的独占锁意味着一个互斥量同时只能被一个线程获取。 其他线程必须等待，直到互斥体再次被释放。 除了独占锁，还有非独占锁。    Boost.Thread里有个<code> boost::shared_lock</code> 的类提供了非独占锁。    正如下面的例子，这个类必须和 <code>boost::shared_mutex</code>    型的互斥量一起使用。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;vector&gt; 
+#include &lt;cstdlib&gt; 
+#include &lt;ctime&gt; 
+
+void wait(int seconds) 
+{ 
+  boost::this_thread::sleep(boost::posix_time::seconds(seconds)); 
+} 
+
+boost::shared_mutex mutex; 
+std::vector&lt;int&gt; random_numbers; 
+
+void fill() 
+{ 
+  std::srand(static_cast&lt;unsigned int&gt;(std::time(0))); 
+  for (int i = 0; i &lt; 3; ++i) 
+  { 
+    boost::unique_lock&lt;boost::shared_mutex&gt; lock(mutex); 
+    random_numbers.push_back(std::rand()); 
+    lock.unlock(); 
+    wait(1); 
+  } 
+} 
+
+void print() 
+{ 
+  for (int i = 0; i &lt; 3; ++i) 
+  { 
+    wait(1); 
+    boost::shared_lock&lt;boost::shared_mutex&gt; lock(mutex); 
+    std::cout &lt;&lt; random_numbers.back() &lt;&lt; std::endl; 
+  } 
+} 
+
+int sum = 0; 
+
+void count() 
+{ 
+  for (int i = 0; i &lt; 3; ++i) 
+  { 
+    wait(1); 
+    boost::shared_lock&lt;boost::shared_mutex&gt; lock(mutex); 
+    sum += random_numbers.back(); 
+  } 
+} 
+
+int main() 
+{ 
+  boost::thread t1(fill); 
+  boost::thread t2(print); 
+  boost::thread t3(count); 
+  t1.join(); 
+  t2.join(); 
+  t3.join(); 
+  std::cout &lt;&lt; &quot;Sum: &quot; &lt;&lt; sum &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.3.4/main.cpp">下载源代码</a></li>
+</ul>
+<p><code>boost::shared_lock</code>    类型的非独占锁可以在线程只对某个资源读访问的情况下使用。 一个线程修改的资源需要写访问，因此需要一个独占锁。    这样做也很明显：只需要读访问的线程不需要知道同一时间其他线程是否访问。 因此非独占锁可以共享一个互斥体。</p>
+<p>在给定的例子， <code>print()</code> 和 <code>count()</code>    都可以只读访问 random_numbers 。 虽然 <code>print()</code>    函数把 random_numbers    里的最后一个数写到标准输出，<code>count()</code> 函数把它统计到 sum    变量。 由于没有函数修改 random_numbers，所有的都可以在同一时间用    <code>boost::shared_lock</code> 类型的非独占锁访问它。</p>
+<p>在 <code>fill()</code> 函数里，需要用一个    <code>boost::unique_lock</code> 类型的非独占锁，因为它插入了一个新的随机数到    random_numbers。 在 <code>unlock()</code> 显式地调用    <code>unlock()</code> 来释放互斥量之后， <code>fill()</code> 等待了一秒。    相比于之前的那个样子， 在 <code>for</code> 循环的尾部调用 <code>wait()</code>    以保证容器里至少存在一个随机数，可以被<code>print()</code> 或者    <code>count()</code> 访问。 对应地，这两个函数在 <code>for</code> 循环的开始调用了    <code>wait()</code> 。</p>
+<p>考虑到在不同的地方每个单独地调用 <code>wait()</code>    ，一个潜在的问题变得很明显:函数调用的顺序直接受CPU执行每个独立进程的顺序决定。    利用所谓的条件变量，可以同步哪些独立的线程，使数组的每个元素都被不同的线程立即添加到    random_numbers 。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;vector&gt; 
+#include &lt;cstdlib&gt; 
+#include &lt;ctime&gt; 
+
+boost::mutex mutex; 
+boost::condition_variable_any cond; 
+std::vector&lt;int&gt; random_numbers; 
+
+void fill() 
+{ 
+  std::srand(static_cast&lt;unsigned int&gt;(std::time(0))); 
+  for (int i = 0; i &lt; 3; ++i) 
+  { 
+    boost::unique_lock&lt;boost::mutex&gt; lock(mutex); 
+    random_numbers.push_back(std::rand()); 
+    cond.notify_all(); 
+    cond.wait(mutex); 
+  } 
+} 
+
+void print() 
+{ 
+  std::size_t next_size = 1; 
+  for (int i = 0; i &lt; 3; ++i) 
+  { 
+    boost::unique_lock&lt;boost::mutex&gt; lock(mutex); 
+    while (random_numbers.size() != next_size) 
+      cond.wait(mutex); 
+    std::cout &lt;&lt; random_numbers.back() &lt;&lt; std::endl; 
+    ++next_size; 
+    cond.notify_all(); 
+  } 
+} 
+
+int main() 
+{ 
+  boost::thread t1(fill); 
+  boost::thread t2(print); 
+  t1.join(); 
+  t2.join(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.3.5/main.cpp">下载源代码</a></li>
+</ul>
+<p>这个例子的程序删除了 <code>wait()</code> 和 <code>count()</code>    。线程不用在每个循环迭代中等待一秒，而是尽可能快地执行。此外，没有计算总额；数字完全写入标准输出流。</p>
+<p>为确保正确地处理随机数，需要一个允许检查多个线程之间特定条件的条件变量来同步不每个独立的线程。</p>
+<p>正如上面所说， <code>fill()</code> 函数用在每个迭代产生一个随机数，然后放在    random_numbers 容器中。 为了防止其他线程同时访问这个容器，就要相应得使用一个排它锁。    不是等待一秒，实际上这个例子却用了一个条件变量。 调用 <code>notify_all()</code>    会唤醒每个哪些正在分别通过调用<code>wait()</code> 等待此通知的线程。</p>
+<p>通过查看 <code>print()</code> 函数里的 <code>for</code>    循环，可以看到相同的条件变量被 <code>wait()</code> 函数调用了。 如果这个线程被    <code>notify_all()</code> 唤醒，它就会试图这个互斥量，但只有在    <code>fill()</code> 函数完全释放之后才能成功。</p>
+<p>这里的窍门就是调用 <code>wait()</code> 会释放相应的被参数传入的互斥量。 在调用    <code>notify_all()</code>后， <code>fill()</code> 函数会通过    <code>wait()</code> 相应地释放线程。 然后它会阻止和等待其他的线程调用    <code>notify_all()</code> ，一旦随机数已写入标准输出流，这就会在    <code>print()</code> 里发生。</p>
+<p>注意到在 <code>print()</code> 函数里调用 <code>wait()</code>    事实上发生在一个单独 <code>while</code> 循环里。 这样做的目的是为了处理在 <code>print()</code>    函数里第一次调用 <code>wait()</code> 函数之前随机数已经放到容器里。 通过比较    random_numbers 里元素的数目与预期值，发现这成功地处理了把随机数写入到标准输出流。</p>
+<hr />
+<h2 id="64-线程本地存储"><a class="header" href="#64-线程本地存储">6.4. 线程本地存储</a></h2>
+<p>线程本地存储（TLS）是一个只能由一个线程访问的专门的存储区域。    TLS的变量可以被看作是一个只对某个特定线程而非整个程序可见的全局变量。 下面的例子显示了这些变量的好处。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;cstdlib&gt; 
+#include &lt;ctime&gt; 
+
+void init_number_generator() 
+{ 
+  static bool done = false; 
+  if (!done) 
+  { 
+    done = true; 
+    std::srand(static_cast&lt;unsigned int&gt;(std::time(0))); 
+  } 
+} 
+
+boost::mutex mutex; 
+
+void random_number_generator() 
+{ 
+  init_number_generator(); 
+  int i = std::rand(); 
+  boost::lock_guard&lt;boost::mutex&gt; lock(mutex); 
+  std::cout &lt;&lt; i &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  boost::thread t[3]; 
+
+  for (int i = 0; i &lt; 3; ++i) 
+    t[i] = boost::thread(random_number_generator); 
+
+  for (int i = 0; i &lt; 3; ++i) 
+    t[i].join(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.4.1/main.cpp">下载源代码</a></li>
+</ul>
+<p>该示例创建三个线程，每个线程写一个随机数到标准输出流。    <code>random_number_generator()</code> 函数将会利用在C++标准里定义的    <code>std::rand()</code> 函数创建一个随机数。 但是用于    <code>std::rand()</code> 的随机数产生器必须先用 <code>std::srand()</code>    正确地初始化。 如果没做，程序始终打印同一个随机数。</p>
+<p>随机数产生器，通过 <code>std::time()</code> 返回当前时间， 在    <code>init_number_generator()</code> 函数里完成初始化。    由于这个值每次都不同，可以保证产生器总是用不同的值初始化，从而产生不同的随机数。 因为产生器只要初始化一次，    <code>init_number_generator()</code> 用了一个静态变量    done 作为条件量。</p>
+<p>如果程序运行了多次，写入的三分之二的随机数显然就会相同。    事实上这个程序有个缺陷：<code>std::rand()</code> 所用的产生器必须被各个线程初始化。 因此    <code>init_number_generator()</code> 的实现实际上是不对的，因为它只调用了一次    <code>std::srand()</code> 。使用TLS，这一缺陷可以得到纠正。</p>
+<pre><code class="language-c++">#include &lt;boost/thread.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;cstdlib&gt; 
+#include &lt;ctime&gt; 
+
+void init_number_generator() 
+{ 
+  static boost::thread_specific_ptr&lt;bool&gt; tls; 
+  if (!tls.get()) 
+    tls.reset(new bool(false)); 
+  if (!*tls) 
+  { 
+    *tls = true; 
+    std::srand(static_cast&lt;unsigned int&gt;(std::time(0))); 
+  } 
+} 
+
+boost::mutex mutex; 
+
+void random_number_generator() 
+{ 
+  init_number_generator(); 
+  int i = std::rand(); 
+  boost::lock_guard&lt;boost::mutex&gt; lock(mutex); 
+  std::cout &lt;&lt; i &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  boost::thread t[3]; 
+
+  for (int i = 0; i &lt; 3; ++i) 
+    t[i] = boost::thread(random_number_generator); 
+
+  for (int i = 0; i &lt; 3; ++i) 
+    t[i].join(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.4.2/main.cpp">下载源代码</a></li>
+</ul>
+<p>用一个TLS变量 tls 代替静态变量 done，是基于用    <code>bool</code> 类型实例化的 <code>boost::thread_specific_ptr</code>    。 原则上， tls 工作起来就像 done    ：它可以作为一个条件指明随机数发生器是否被初始化。 但是关键的区别，就是 tls    存储的值只对相应的线程可见和可用。</p>
+<p>一旦一个 <code>boost::thread_specific_ptr</code>    型的变量被创建，它可以相应地设置。 不过，它期望得到一个 <code>bool</code> 型变量的地址，而非它本身。使用    <code>reset()</code> 方法，可以把它的地址保存到 tls 里面。    在给出的例子中，会动态地分配一个 <code>bool</code> 型的变量，由 <code>new</code> 返回它的地址，并保存到    tls 里。 为了避免每次调用    <code>init_number_generator()</code> 都设置 tls    ，它会通过 <code>get()</code> 函数检查是否已经保存了一个地址。</p>
+<p>由于 <code>boost::thread_specific_ptr</code>    保存了一个地址，它的行为就像一个普通的指针。 因此，<code>operator*()</code> 和    <code>operator-&gt;()</code> 都被被重载以方便使用。 这个例子用 <code>*tls</code>    检查这个条件当前是 <code>true</code> 还是 <code>false</code>。    再根据当前的条件，随机数生成器决定是否初始化。</p>
+<p>正如所见， <code>boost::thread_specific_ptr</code>    允许为当前进程保存一个对象的地址，然后只允许当前进程获得这个地址。 然而，当一个线程已经成功保存这个地址，其他的线程就会可能就失败。</p>
+<p>如果程序正在执行时，它可能会令人感到奇怪：尽管有了TLS的变量，生成的随机数仍然相等。    这是因为，三个线程在同一时间被创建，从而造成随机数生成器在同一时间初始化。    如果该程序执行了几次，随机数就会改变，这就表明生成器初始化正确了。</p>
+<hr />
+<h2 id="65-练习"><a class="header" href="#65-练习">6.5. 练习</a></h2>
+<p>​              You can buy               <a href="http://en.highscore.de/shop/index.php?p=boost-solution">solutions to all exercises</a>              in this book as a ZIP file.</p>
+<ol>
+<li>
+<p>重构下面的程序用两个线程来计算总和。由于现在许多处理器有两个内核，应利用线程减少执行时间。</p>
+<pre><code class="language-c++">#include &lt;boost/date_time/posix_time/posix_time.hpp&gt; 
+#include &lt;boost/cstdint.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time(); 
+
+  boost::uint64_t sum = 0; 
+  for (int i = 0; i &lt; 1000000000; ++i) 
+    sum += i; 
+
+  boost::posix_time::ptime end = boost::posix_time::microsec_clock::local_time(); 
+  std::cout &lt;&lt; end - start &lt;&lt; std::endl; 
+
+  std::cout &lt;&lt; sum &lt;&lt; std::endl; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.5.1/main.cpp">下载源代码</a></li>
+</ul>
+</li>
+<li>
+<p>通过利用处理器尽可能同时执行多的线程，把例1一般化。 例如，如果处理器有四个内核，就应该利用四个线程。</p>
+</li>
+<li>
+<p>修改下面的程序，在 <code>main()</code>中自己的线程中执行        <code>thread()</code> 。 程序应该能够计算总和，然后把结果输入到标准输出两次。 但可以更改        <code>calculate()</code>，<code>print()</code> 和        <code>thread()</code> 的实现，每个函数的接口仍需保持一致。        也就是说每个函数应该仍然没有任何参数，也不需要返回一个值。</p>
+<pre><code class="language-c++">#include &lt;iostream&gt; 
+
+int sum = 0; 
+
+void calculate() 
+{ 
+  for (int i = 0; i &lt; 1000; ++i) 
+    sum += i; 
+} 
+
+void print() 
+{ 
+  std::cout &lt;&lt; sum &lt;&lt; std::endl; 
+} 
+
+void thread() 
+{ 
+  calculate(); 
+  print(); 
+} 
+
+int main() 
+{ 
+  thread(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/6.5.2/main.cpp">下载源代码</a></li>
+</ul>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="stringhandling.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="asio.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="stringhandling.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="asio.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
