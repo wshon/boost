@@ -1,0 +1,1129 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>第 11 章 序列化 - Boost C++ 库</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="frontpage.html"><strong aria-hidden="true">1.</strong> 导言</a></li><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">2.</strong> 第 1 章 简介</a></li><li class="chapter-item expanded "><a href="smartpointers.html"><strong aria-hidden="true">3.</strong> 第 2 章 智能指针</a></li><li class="chapter-item expanded "><a href="functionobjects.html"><strong aria-hidden="true">4.</strong> 第 3 章 函数对象</a></li><li class="chapter-item expanded "><a href="eventhandling.html"><strong aria-hidden="true">5.</strong> 第 4 章 事件处理</a></li><li class="chapter-item expanded "><a href="stringhandling.html"><strong aria-hidden="true">6.</strong> 第 5 章 字符串处理</a></li><li class="chapter-item expanded "><a href="multithreading.html"><strong aria-hidden="true">7.</strong> 第 6 章 多线程</a></li><li class="chapter-item expanded "><a href="asio.html"><strong aria-hidden="true">8.</strong> 第 7 章 异步输入输出</a></li><li class="chapter-item expanded "><a href="interprocesscommunication.html"><strong aria-hidden="true">9.</strong> 第 8 章 进程间通讯</a></li><li class="chapter-item expanded "><a href="filesystem.html"><strong aria-hidden="true">10.</strong> 第 9 章 文件系统</a></li><li class="chapter-item expanded "><a href="datetime.html"><strong aria-hidden="true">11.</strong> 第 10 章 日期与时间</a></li><li class="chapter-item expanded "><a href="serialization.html" class="active"><strong aria-hidden="true">12.</strong> 第 11 章 序列化</a></li><li class="chapter-item expanded "><a href="parser.html"><strong aria-hidden="true">13.</strong> 第 12 章 词法分析器</a></li><li class="chapter-item expanded "><a href="containers.html"><strong aria-hidden="true">14.</strong> 第 13 章 容器</a></li><li class="chapter-item expanded "><a href="datastructures.html"><strong aria-hidden="true">15.</strong> 第 14 章 数据结构</a></li><li class="chapter-item expanded "><a href="errorhandling.html"><strong aria-hidden="true">16.</strong> 第 15 章 错误处理</a></li><li class="chapter-item expanded "><a href="castoperators.html"><strong aria-hidden="true">17.</strong> 第 16 章 类型转换操作符</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Boost C++ 库</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="第-11-章-序列化"><a class="header" href="#第-11-章-序列化">第 11 章 序列化</a></h1>
+<hr />
+<h2 id="111-概述"><a class="header" href="#111-概述">11.1. 概述</a></h2>
+<p>Boost C++ 的 <a href="http://www.boost.org/libs/serialization/">序列化</a> 库允许将 C++    应用程序中的对象转换为一个字节序列， 此序列可以被保存，并可在将来恢复对象的时候再次加载。 各种不同的数据格式，包括    XML，只要具有一定规则的数据格式，在序列化后都产生一个字节序列。所有 Boost.Serialization    支持的格式，在某些方面来说都是专有的。 比如 XML 格式不同用来和不是用 C++ Boost.Serialization    库开发的应用程序交换数据。所有以 XML 格式存储的数据适合于从之前存储的数据上恢复同一个 C++ 对象。 XML 格式的唯一优点是序列化的 C++    对象容易理解，这是很有用的，比如说在调试的时候。</p>
+<hr />
+<h2 id="112-归档"><a class="header" href="#112-归档">11.2. 归档</a></h2>
+<p>Boost.Serialization 的主要概念是归档。 归档的文件是相当于序列化的 C++ 对象的一个字节流。    对象可以通过序列化添加到归档文件，相应地也可从归档文件中加载。 为了恢复和之前存储相同的 C++ 对象，需假定数据类型是相同的。</p>
+<p>下面看一个简单的例子。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;iostream&gt; 
+
+int main() 
+{ 
+  boost::archive::text_oarchive oa(std::cout); 
+  int i = 1; 
+  oa &lt;&lt; i; 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.2.1/main.cpp">下载源代码</a></li>
+</ul>
+<p>Boost.Serialization 提供了多个归档类，如    <code>boost::archive::text_oarchive </code>类，它定义在 <code>boost/archive/text_oarchive.hpp</code> 文件中。    <code>boost::archive::text_oarchive</code>，可将对象序列化为文本流。 上面的应用程序将    <code>22 serialization::archive 5 1</code>    写出到标准输出流。</p>
+<p>可见， <code>boost::archive::text_oarchive </code> 类型的对象    oa 可以用来像流 (stream) 一样通过 <code>&lt;&lt; </code>来序列化对象。    尽管如此，归档也不能被认为是可以存储任何数据的常规的流。 为了以后恢复数据，必须以相同的顺序使用和先前存储时用的一样的数据类型。    下面的例子序列化和恢复了 <code>int</code> 类型的变量。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;fstream&gt; 
+
+void save() 
+{ 
+  std::ofstream file(&quot;archiv.txt&quot;); 
+  boost::archive::text_oarchive oa(file); 
+  int i = 1; 
+  oa &lt;&lt; i; 
+} 
+
+void load() 
+{ 
+  std::ifstream file(&quot;archiv.txt&quot;); 
+  boost::archive::text_iarchive ia(file); 
+  int i = 0; 
+  ia &gt;&gt; i; 
+  std::cout &lt;&lt; i &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.2.2/main.cpp">下载源代码</a></li>
+</ul>
+<p>当 <code>boost::archive::text_oarchive</code>    被用来把数据序列化为文本流， <code>boost::archive::text_iarchive</code>    就用来从文本流恢复数据。 为了使用这些类，必须包含 <code>boost/archive/text_iarchive.hpp</code> 头文件。</p>
+<p>归档的构造函数需要一个输入或者输出流作为参数。 流分别用来序列化或恢复数据。 虽然上面的应用程序使用了一个文件流，其他流，如    stringstream 流也是可以的。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+
+std::stringstream ss; 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  int i = 1; 
+  oa &lt;&lt; i; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  int i = 0; 
+  ia &gt;&gt; i; 
+  std::cout &lt;&lt; i &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.2.3/main.cpp">下载源代码</a></li>
+</ul>
+<p>这个应用程序也向标准输出流写了 <code>1</code>。 然而，与前面的例子相比,    数据却是用 stringstream 流序列化的。</p>
+<p>到目前为止， 原始的数据类型已经被序列化了。 接下来的例子演示如何序列化用户定义类型的对象。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age) 
+    : age_(age) 
+  { 
+  } 
+
+  int age() const 
+  { 
+    return age_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; age_; 
+  } 
+
+  int age_; 
+}; 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  person p(31); 
+  oa &lt;&lt; p; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  person p; 
+  ia &gt;&gt; p; 
+  std::cout &lt;&lt; p.age() &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.2.4/main.cpp">下载源代码</a></li>
+</ul>
+<p>为了序列化用户定义类型的对话， <code>serialize()</code>    函数必须定义，它在对象序列化或从字节流中恢复是被调用。 由于 <code>serialize ()</code>    函数既用来序列化又用来恢复数据， Boost.Serialization 除了 <code>&lt;&lt; </code> 和    <code>&gt;&gt; </code>之外还提供了 <code>&amp;</code> 操作符。如果使用这个操作符，就不再需要在    <code>serialize()</code> 函数中区分是序列化和恢复了。</p>
+<p><code>serialize ()</code>    在对象序列化或恢复时自动调用。它应从来不被明确地调用，所以应生命为私有的。 这样的话，    <code>boost::serialization::access</code> 类必须被声明为友元，以允许    Boost.Serialization 能够访问到这个函数。</p>
+<p>有些情况下需要添加 <code>serialize()</code> 函数却不能修改现有的类。 比如，对于来自    C++ 标准库或其他库的类就是这样的。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age) 
+    : age_(age) 
+  { 
+  } 
+
+  int age() const 
+  { 
+    return age_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  friend void serialize(Archive &amp;ar, person &amp;p, const unsigned int version); 
+
+  int age_; 
+}; 
+
+template &lt;typename Archive&gt; 
+void serialize(Archive &amp;ar, person &amp;p, const unsigned int version) 
+{ 
+  ar &amp; p.age_; 
+} 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  person p(31); 
+  oa &lt;&lt; p; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  person p; 
+  ia &gt;&gt; p; 
+  std::cout &lt;&lt; p.age() &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.2.5/main.cpp">下载源代码</a></li>
+</ul>
+<p>为了序列化那些不能被修改的数据类型，要定义一个单独的函数    <code>serialize()</code>，如上面的例子所示。 这个函数需要相应的数据类型的引用作为它的第二个参数。</p>
+<p>如果要被序列化的数据类型中含有不能经由公有函数访问的私有属性，事情就变得复杂了。 在这种情况下，该数据列席就需要修改。    在上面应用程序中的 <code>serialize ()</code> 函数如果不声明为 <code>friend    </code>，就不能访问 age_ 属性。</p>
+<p>不过还好，Boost.Serialization 为许多C++标准库的类提供了    <code>serialize()</code> 函数。 为了序列化基于 C++ 标准库的类，需要包含额外的头文件。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;boost/serialization/string.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+#include &lt;string&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age, const std::string &amp;name) 
+    : age_(age), name_(name) 
+  { 
+  } 
+
+  int age() const 
+  { 
+    return age_; 
+  } 
+
+  std::string name() const 
+  { 
+    return name_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  friend void serialize(Archive &amp;ar, person &amp;p, const unsigned int version); 
+
+  int age_; 
+  std::string name_; 
+}; 
+
+template &lt;typename Archive&gt; 
+void serialize(Archive &amp;ar, person &amp;p, const unsigned int version) 
+{ 
+  ar &amp; p.age_; 
+  ar &amp; p.name_; 
+} 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  person p(31, &quot;Boris&quot;); 
+  oa &lt;&lt; p; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  person p; 
+  ia &gt;&gt; p; 
+  std::cout &lt;&lt; p.age() &lt;&lt; std::endl; 
+  std::cout &lt;&lt; p.name() &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.2.6/main.cpp">下载源代码</a></li>
+</ul>
+<p>这个例子扩展了 <code>person </code> 类，增加了 <code>std::string    </code>类型的名称变量，为了序列化这个属性property, the header file <code>boost/serialization/string.hpp </code>    头文件必须包含，它提供了合适的单独的 <code>serialize ()</code> 函数。</p>
+<p>正如前面所提到的， Boost.Serialization 为许多 C++ 标准库类定义了 <code>serialize    ()</code> 函数。 这些都定义在和 C++ 标准库头文件名称相对应的头文件中。 为了序列化 <code>std::string    </code> 类型的对象，必须包含 <code>boost/serialization/string.hpp </code> 头文件。 为了序列化    <code>std::vector </code> 类型的对象，必须包含 <code>boost/serialization/vector.hpp </code> 头文件。    于是在给定的场合中应该包含哪个头文件就显而易见了。</p>
+<p>还有一个 <code>serialize ()</code>函数的参数，到目前为止我们一直忽略没谈到，那就是    version 。 如果归档需要向前兼容，以支持给定应用程序的未来版本，那么这个参数就是有意义的。    接下来的例子考虑到 <code>person </code> 类的归档需要向前兼容。由于 <code>person    </code> 的原始版本没有包含任何名称，新版本的 <code>person </code>    应该能够处理不带名称的旧的归档。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;boost/serialization/string.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+#include &lt;string&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age, const std::string &amp;name) 
+    : age_(age), name_(name) 
+  { 
+  } 
+
+  int age() const 
+  { 
+    return age_; 
+  } 
+
+  std::string name() const 
+  { 
+    return name_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  friend void serialize(Archive &amp;ar, person &amp;p, const unsigned int version); 
+
+  int age_; 
+  std::string name_; 
+}; 
+
+template &lt;typename Archive&gt; 
+void serialize(Archive &amp;ar, person &amp;p, const unsigned int version) 
+{ 
+  ar &amp; p.age_; 
+  if (version &gt; 0) 
+    ar &amp; p.name_; 
+} 
+
+BOOST_CLASS_VERSION(person, 1) 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  person p(31, &quot;Boris&quot;); 
+  oa &lt;&lt; p; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  person p; 
+  ia &gt;&gt; p; 
+  std::cout &lt;&lt; p.age() &lt;&lt; std::endl; 
+  std::cout &lt;&lt; p.name() &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.2.7/main.cpp">下载源代码</a></li>
+</ul>
+<p><code>BOOST_CLASS_VERSION </code> 宏用来指定类的版本号。 上面例子中    <code>person </code> 类的版本号设置为1。 如果没有使用 <code>BOOST_CLASS_VERSION    </code> ， 版本号缺省是0。</p>
+<p>版本号存储在归档文件中，因此也就是归档的一部份。 当一个特定类的版本号通过 <code>BOOST_CLASS_VERSION    </code> 宏，在序列化时给定时， <code>serialize ()</code> 函数的 version     参数被设为给定值存储在归档中。 如果新版本的 <code>person </code>    访问一个包含旧版本序列化对象的归档时， name_  由于旧版本不含有这个属性而不能恢复。    通过这种机制，Boost.Serialization 提供了向前兼容归档的支持。</p>
+<hr />
+<h2 id="113-指针和引用"><a class="header" href="#113-指针和引用">11.3. 指针和引用</a></h2>
+<p>Boost.Serialization 还能序列化指针和引用。    由于指针存储对象的地址，序列化对象的地址没有什么意义，而是在序列化指针和引用时，对象的引用被自动地序列化。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age) 
+    : age_(age) 
+  { 
+  } 
+
+  int age() const 
+  { 
+    return age_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; age_; 
+  } 
+
+  int age_; 
+}; 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  person *p = new person(31); 
+  oa &lt;&lt; p; 
+  std::cout &lt;&lt; std::hex &lt;&lt; p &lt;&lt; std::endl; 
+  delete p; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  person *p; 
+  ia &gt;&gt; p; 
+  std::cout &lt;&lt; std::hex &lt;&lt; p &lt;&lt; std::endl; 
+  std::cout &lt;&lt; p-&gt;age() &lt;&lt; std::endl; 
+  delete p; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.3.1/main.cpp">下载源代码</a></li>
+</ul>
+<p>上面的应用程序创建了一个新的 <code>person </code> 类型的对象，使用 <code>new    </code> 创建并赋值给指针 p 。 是指针 - 而不是 <code>*p </code> -    被序列化了。Boost.Serialization 自动地通过 p     的引用序列化对象本身而不是对象的地址。</p>
+<p>如果归档被恢复， p  不必指向相同的地址。 而是创建新对象并将它的地址赋值给    p  。 Boost.Serialization    只保证对象和之前序列化的对象相同，而不是地址相同。</p>
+<p>由于新式的 C++ 在动态分配内存有关的地方使用 智能指针 (smart pointers) ， Boost.Serialization    对此也提供了相应的支持。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;boost/serialization/scoped_ptr.hpp&gt; 
+#include &lt;boost/scoped_ptr.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age) 
+    : age_(age) 
+  { 
+  } 
+
+  int age() const 
+  { 
+    return age_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; age_; 
+  } 
+
+  int age_; 
+}; 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  boost::scoped_ptr&lt;person&gt; p(new person(31)); 
+  oa &lt;&lt; p; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  boost::scoped_ptr&lt;person&gt; p; 
+  ia &gt;&gt; p; 
+  std::cout &lt;&lt; p-&gt;age() &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.3.2/main.cpp">下载源代码</a></li>
+</ul>
+<p>例子中使用了智能指针 <code>boost::scoped_ptr </code> 来管理动态分配的    <code>person </code> 类型的对象。 为了序列化这样的指针，必须包含 <code>boost/serialization/scoped_ptr.hpp </code>    头文件。</p>
+<p>在使用 <code>boost::shared_ptr </code> 类型的智能指针的时候需要序列化，那么必须包含    <code>boost/serialization/shared_ptr.hpp </code>    头文件。</p>
+<p>下面的应用程序使用引用替代了指针。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age) 
+    : age_(age) 
+  { 
+  } 
+
+  int age() const 
+  { 
+    return age_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; age_; 
+  } 
+
+  int age_; 
+}; 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  person p(31); 
+  person &amp;pp = p; 
+  oa &lt;&lt; pp; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  person p; 
+  person &amp;pp = p; 
+  ia &gt;&gt; pp; 
+  std::cout &lt;&lt; pp.age() &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.3.3/main.cpp">下载源代码</a></li>
+</ul>
+<p>可见，Boost.Serialization 还能没有任何问题地序列化引用。 就像指针一样，引用对象被自动地序列化。</p>
+<hr />
+<h2 id="114-对象类层次结构的序列化"><a class="header" href="#114-对象类层次结构的序列化">11.4. 对象类层次结构的序列化</a></h2>
+<p>为了序列化基于类层次结构的对象，子类必须在 <code>serialize ()</code>函数中访问    <code>boost::serialization::base_object ()</code>。    此函数确保继承自基类的属性也能正确地序列化。 下面的例子演示了一个名为 <code>developer </code>    类，它继承自类 <code>person </code> 。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;boost/serialization/string.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+#include &lt;string&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age) 
+    : age_(age) 
+  { 
+  } 
+
+  int age() const 
+  { 
+    return age_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; age_; 
+  } 
+
+  int age_; 
+}; 
+
+class developer 
+  : public person 
+{ 
+public: 
+  developer() 
+  { 
+  } 
+
+  developer(int age, const std::string &amp;language) 
+    : person(age), language_(language) 
+  { 
+  } 
+
+  std::string language() const 
+  { 
+    return language_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; boost::serialization::base_object&lt;person&gt;(*this); 
+    ar &amp; language_; 
+  } 
+
+  std::string language_; 
+}; 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  developer d(31, &quot;C++&quot;); 
+  oa &lt;&lt; d; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  developer d; 
+  ia &gt;&gt; d; 
+  std::cout &lt;&lt; d.age() &lt;&lt; std::endl; 
+  std::cout &lt;&lt; d.language() &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.4.1/main.cpp">下载源代码</a></li>
+</ul>
+<p><code>person </code> 和 <code>developer </code>    这两个类都包含有一个私有的 <code>serialize ()</code> 函数， 它使得基于其他类的对象能被序列化。 由于    <code>developer </code> 类继承自 <code>person </code>类，    所以它的 <code>serialize ()</code> 函数必须确保继承自 <code>person    </code> 属性也能被序列化。</p>
+<p>继承自基类的属性被序列化是通过在子类的 <code>serialize ()</code> 函数中用    <code>boost::serialization::base_object ()</code> 函数访问基类实现的。    在例子中强制要求使用这个函数而不是 <code>static_cast </code> 是因为只有    <code>boost::serialization::base_object ()</code> 才能保证正确地序列化。</p>
+<p>动态创建对象的地址可以被赋值给对应的基类类型的指针。 下面的例子演示了 Boost.Serialization    还能够正确地序列化它们。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;boost/serialization/string.hpp&gt; 
+#include &lt;boost/serialization/export.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+#include &lt;string&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age) 
+    : age_(age) 
+  { 
+  } 
+
+  virtual int age() const 
+  { 
+    return age_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; age_; 
+  } 
+
+  int age_; 
+}; 
+
+class developer 
+  : public person 
+{ 
+public: 
+  developer() 
+  { 
+  } 
+
+  developer(int age, const std::string &amp;language) 
+    : person(age), language_(language) 
+  { 
+  } 
+
+  std::string language() const 
+  { 
+    return language_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; boost::serialization::base_object&lt;person&gt;(*this); 
+    ar &amp; language_; 
+  } 
+
+  std::string language_; 
+}; 
+
+BOOST_CLASS_EXPORT(developer) 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  person *p = new developer(31, &quot;C++&quot;); 
+  oa &lt;&lt; p; 
+  delete p; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  person *p; 
+  ia &gt;&gt; p; 
+  std::cout &lt;&lt; p-&gt;age() &lt;&lt; std::endl; 
+  delete p; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.4.2/main.cpp">下载源代码</a></li>
+</ul>
+<p>应用程序在 <code>save ()</code> 函数创建了 <code>developer    </code> 类型的对象并赋值给 <code>person* </code> 类型的指针，接下来通过 <code>&lt;&lt;    </code> 序列化。</p>
+<p>正如在前面章节中提到的， 引用对象被自动地序列化。 为了让 Boost.Serialization 识别将要序列化的    <code>developer </code> 类型的对象，即使指针是 <code>person* </code> 类型的对象。    <code>developer </code> 类需要相应的声明。 这是通过这个    <code>BOOST_CLASS_EXPORT </code> 宏实现的，它定义在 <code>boost/serialization/export.hpp </code> 文件中。 因为    <code>developer </code> 这个数据类型没有指针形式的定义，所以 Boost.Serialization    没有这个宏就不能正确地序列化 <code>developer </code> 。</p>
+<p>如果子类对象需要通过基类的指针序列化，那么 <code>BOOST_CLASS_EXPORT </code> 宏必须要用。</p>
+<p>由于静态注册的原因， <code>BOOST_CLASS_EXPORT </code>    的一个缺点是可能有些注册的类最后是不需要序列化的。 Boost.Serialization 为这种情况提供一种解决方案。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;boost/serialization/string.hpp&gt; 
+#include &lt;boost/serialization/export.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+#include &lt;string&gt; 
+
+std::stringstream ss; 
+
+class person 
+{ 
+public: 
+  person() 
+  { 
+  } 
+
+  person(int age) 
+    : age_(age) 
+  { 
+  } 
+
+  virtual int age() const 
+  { 
+    return age_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; age_; 
+  } 
+
+  int age_; 
+}; 
+
+class developer 
+  : public person 
+{ 
+public: 
+  developer() 
+  { 
+  } 
+
+  developer(int age, const std::string &amp;language) 
+    : person(age), language_(language) 
+  { 
+  } 
+
+  std::string language() const 
+  { 
+    return language_; 
+  } 
+
+private: 
+  friend class boost::serialization::access; 
+
+  template &lt;typename Archive&gt; 
+  void serialize(Archive &amp;ar, const unsigned int version) 
+  { 
+    ar &amp; boost::serialization::base_object&lt;person&gt;(*this); 
+    ar &amp; language_; 
+  } 
+
+  std::string language_; 
+}; 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  oa.register_type&lt;developer&gt;(); 
+  person *p = new developer(31, &quot;C++&quot;); 
+  oa &lt;&lt; p; 
+  delete p; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  ia.register_type&lt;developer&gt;(); 
+  person *p; 
+  ia &gt;&gt; p; 
+  std::cout &lt;&lt; p-&gt;age() &lt;&lt; std::endl; 
+  delete p; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.4.3/main.cpp">下载源代码</a></li>
+</ul>
+<p>上面的应用程序没有使用 <code>BOOST_CLASS_EXPORT </code> 宏，而是调用了    <code>register_type ()</code> 模板函数。 需要注册的类型作为模板参数传入。</p>
+<p>请注意 <code>register_type ()</code> 必须在 <code>save    ()</code> 和 <code>load ()</code> 都要调用。</p>
+<p><code>register_type ()</code> 的优点是只有需要序列化的类才注册。    比如在开发一个库时，你不知道开发人员将来要序列化哪些类。 当然 <code>BOOST_CLASS_EXPORT </code>    宏用起来简单，可它却可能注册那些不需要序列化的类型。</p>
+<hr />
+<h2 id="115-优化用封装函数"><a class="header" href="#115-优化用封装函数">11.5. 优化用封装函数</a></h2>
+<p>在理解了如何序列化对象之后，本节介绍用来优化序列化过程的封装函数。 通过这个函数，对象被打上标记允许    Boost.Serialization 使用一些优化技术。</p>
+<p>下面例子使用不带封装函数的 Boost.Serialization 。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;boost/array.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+
+std::stringstream ss; 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  boost::array&lt;int, 3&gt; a = { 0, 1, 2 }; 
+  oa &lt;&lt; a; 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  boost::array&lt;int, 3&gt; a; 
+  ia &gt;&gt; a; 
+  std::cout &lt;&lt; a[0] &lt;&lt; &quot;, &quot; &lt;&lt; a[1] &lt;&lt; &quot;, &quot; &lt;&lt; a[2] &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.5.1/main.cpp">下载源代码</a></li>
+</ul>
+<p>上面的应用程序创建一个文本流 <code>22 serialization::archive 5 0 0 3 0 1    2</code> 并将其写到标准输出流中。 使用封装函数    <code>boost::serialization::make_array ()</code> ，输出可以缩短到    <code>22 serialization::archive 5 0 1 2</code>    。</p>
+<pre><code class="language-c++">#include &lt;boost/archive/text_oarchive.hpp&gt; 
+#include &lt;boost/archive/text_iarchive.hpp&gt; 
+#include &lt;boost/serialization/array.hpp&gt; 
+#include &lt;boost/array.hpp&gt; 
+#include &lt;iostream&gt; 
+#include &lt;sstream&gt; 
+
+std::stringstream ss; 
+
+void save() 
+{ 
+  boost::archive::text_oarchive oa(ss); 
+  boost::array&lt;int, 3&gt; a = { 0, 1, 2 }; 
+  oa &lt;&lt; boost::serialization::make_array(a.data(), a.size()); 
+} 
+
+void load() 
+{ 
+  boost::archive::text_iarchive ia(ss); 
+  boost::array&lt;int, 3&gt; a; 
+  ia &gt;&gt; boost::serialization::make_array(a.data(), a.size()); 
+  std::cout &lt;&lt; a[0] &lt;&lt; &quot;, &quot; &lt;&lt; a[1] &lt;&lt; &quot;, &quot; &lt;&lt; a[2] &lt;&lt; std::endl; 
+} 
+
+int main() 
+{ 
+  save(); 
+  load(); 
+} 
+</code></pre>
+<ul>
+<li><a href="http://zh.highscore.de/cpp/boost/src/11.5.2/main.cpp">下载源代码</a></li>
+</ul>
+<p><code>boost::serialization::make_array ()</code> 函数需要地址和数组的长度。    由于长度是硬编码的，所以它不需要作为 <code>boost::array </code> 类型的一部分序列化。任何时候，如果    <code>boost::array </code> 或 <code>std::vector </code>    包含一个可以直接序列化的数组，都可以使用这个函数。 其他一般需要序列化的属性不能被序列化。</p>
+<p>另一个 Boost.Serialization 提供的封装函数是    <code>boost::serialization::make_binary_object ()</code> 。 与    <code>boost::serialization::make_array ()</code> 类似，它也需要地址和长度。    <code>boost::serialization::make_binary_object ()</code>    函数只是为了用来序列化没有底层结构的二进制数据，而 <code>boost::serialization::make_array    ()</code> 是用来序列化数组的。</p>
+<hr />
+<h2 id="116-练习"><a class="header" href="#116-练习">11.6. 练习</a></h2>
+<p>​              You can buy               <a href="http://en.highscore.de/shop/index.php?p=boost-solution">solutions to all exercises</a>              in this book as a ZIP file.</p>
+<ol>
+<li>开发一个应用程序，能够将任意个数有名称，部门和雇员唯一标识号构成的记录， 序列化到文件并从中恢复。        记录应该在恢复后在屏幕上显示。 用样本记录测试应用程序。</li>
+<li>扩展上面的应用程序，为每个雇员存储生日。 应用程序应该还可以恢复 在上面的练习创建的的旧版本的记录。</li>
+</ol>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="datetime.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="parser.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="datetime.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="parser.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
