@@ -1,6 +1,15 @@
 # Boost C++ 库
 
-[![img](http://zh.highscore.de/cpp/boost/img/88x31_cc_logo.gif)](http://creativecommons.org/licenses/by-nc-nd/3.0/de/deed.zh) 该书采用 [Creative Commons License](http://creativecommons.org/licenses/by-nc-nd/3.0/de/deed.zh) 授权
+> ![img](https://cdn.jsdelivr.net/gh/soncoya/storage@assets/imgs/202111171117019.png) 
+> *The Boost C++ Libraries* has been updated. The second edition was published in September 2014 and introduces 72 Boost libraries with more than 430 examples. It is available at [Amazon](http://www.amazon.com/gp/product/1937434362/ref=as_li_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=1937434362&linkCode=as2&tag=theboostcppli-20&linkId=ZD2OKWS6OJX5F3S3), [Barnes and Noble](http://www.barnesandnoble.com/w/the-boost-c-libraries-boris-schaling/1120389155?ean=9781937434366), [for Kindle](http://www.amazon.com/gp/product/B00OX0KJOK/ref=as_li_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B00OX0KJOK&linkCode=as2&tag=theboostcppli-20&linkId=B5LGTSOTEZ6C7EVL), as an [Epub](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=F7WCSZLHDU9GN) and as a [PDF](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HMMF8LP558LHL) file. The second edition is based on C++11 and the Boost libraries 1.55.0 and 1.56.0 with the latter version having been released in August 2014.  Find the second edition online at http://theboostcpplibraries.com/ 
+
+
+
+> 本站点内容由 [Highscore - The Boost C++ Libraries](http://zh.highscore.de/cpp/boost/) 提供
+
+
+
+[![img](https://cdn.jsdelivr.net/gh/soncoya/storage@assets/imgs/202111171123826.png)](http://creativecommons.org/licenses/by-nc-nd/3.0/de/deed.zh) 该书采用 [Creative Commons License](http://creativecommons.org/licenses/by-nc-nd/3.0/de/deed.zh) 授权
 
 本书的中文版由           [Albert Lai](mailto:alai04@gmail.com), [Jerry Guo](mailto:jerry2mouse@gmail.com), [Kun Zeng](mailto:zengkun100@gmail.com), [Liangfu Chen](mailto:chenclf@vrlab.cau.ac.kr) ([主页](http://vrlab.cau.ac.kr/~chenclf/)), [Cui Wei](mailto:watsoncui@gmail.com) 和 [Rui Shi](mailto:shiruide@gmail.com)          翻译。         
 
